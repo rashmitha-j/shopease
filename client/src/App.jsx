@@ -2,12 +2,14 @@ import { createBrowserRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 
 import AuthProvider from './context/AuthProvider.jsx';
+import CartProvider from './context/CartProvider.jsx';
 import Layout from './components/layout/Layout.jsx';
 import HomePage from './pages/HomePage.jsx';
 import ProductsPage from './pages/ProductsPage.jsx';
 import ProductDetailPage from './pages/ProductDetailPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
+import CartPage from './pages/CartPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 const router = createBrowserRouter([
@@ -21,6 +23,7 @@ const router = createBrowserRouter([
       { path: 'products/:slug', Component: ProductDetailPage },
       { path: 'login', Component: LoginPage },
       { path: 'register', Component: RegisterPage },
+      { path: 'cart', Component: CartPage },
       { path: '*', Component: NotFoundPage },
     ],
   },
@@ -29,7 +32,9 @@ const router = createBrowserRouter([
 export default function App() {
   return (
     <AuthProvider>
-      <RouterProvider router={router} />
+      <CartProvider>
+        <RouterProvider router={router} />
+      </CartProvider>
     </AuthProvider>
   );
 }

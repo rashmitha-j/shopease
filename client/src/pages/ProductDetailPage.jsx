@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router';
 import { useApi } from '../hooks/useApi.js';
 import { discountPercent, formatPrice } from '../utils/format.js';
 import StarRating from '../components/products/StarRating.jsx';
+import AddToCart from '../components/cart/AddToCart.jsx';
 import { EmptyState, ErrorState } from '../components/ui/StatusMessage.jsx';
 
 export default function ProductDetailPage() {
@@ -89,14 +90,8 @@ export default function ProductDetailPage() {
 
           <StockStatus stock={stock} />
 
-          <button
-            type="button"
-            disabled
-            className="mt-6 w-full cursor-not-allowed rounded-lg bg-brand-600 px-6 py-3 font-semibold text-white opacity-50 sm:w-auto"
-          >
-            Add to cart
-          </button>
-          <p className="mt-2 text-xs text-gray-500">The cart is coming soon.</p>
+          {/* key resets the chosen quantity and message when switching products */}
+          <AddToCart key={product._id} product={product} />
 
           <div className="mt-8 border-t border-gray-200 pt-6">
             <h2 className="text-sm font-semibold text-gray-900">Description</h2>

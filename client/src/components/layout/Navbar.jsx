@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate, useSearchParams } from 'react-router';
 import { useAuth } from '../../hooks/useAuth.js';
+import { useCart } from '../../hooks/useCart.js';
 
 const NAV_LINKS = [
   { to: '/', label: 'Home', end: true },
@@ -115,11 +116,13 @@ export default function Navbar() {
           )}
         </div>
 
+        <CartLink onClick={closeMenu} />
+
         {/* Mobile menu button */}
         <button
           type="button"
           onClick={() => setMenuOpen((open) => !open)}
-          className="ml-auto rounded-md p-2 text-gray-700 hover:bg-gray-100 md:hidden"
+          className="rounded-md p-2 text-gray-700 hover:bg-gray-100 md:hidden"
           aria-expanded={menuOpen}
           aria-controls="mobile-menu"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
@@ -180,6 +183,29 @@ export default function Navbar() {
   );
 }
 
+function CartLink({ onClick }) {
+  const { totals } = useCart();
+  const count = totals.count;
+
+  return (
+    <NavLink
+      to="/cart"
+      onClick={onClick}
+      aria-label={`Cart, ${count} ${count === 1 ? 'item' : 'items'}`}
+      className={({ isActive }) =>
+        `relative ml-auto rounded-md p-2 hover:bg-gray-100 md:ml-0 ${isActive ? 'text-brand-600' : 'text-gray-700'}`
+      }
+    >
+      <CartIcon className="size-6" />
+      {count > 0 && (
+        <span className="absolute -top-0.5 -right-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-600 px-1 text-xs font-semibold text-white">
+          {count > 99 ? '99+' : count}
+        </span>
+      )}
+    </NavLink>
+  );
+}
+
 function UserBadge({ user, showEmail = false }) {
   const firstName = user.name.split(' ')[0];
 
@@ -213,6 +239,18 @@ function SearchIcon(props) {
         fillRule="evenodd"
         d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.45 4.39l3.08 3.08a.75.75 0 1 1-1.06 1.06l-3.08-3.08A7 7 0 0 1 2 9Z"
         clipRule="evenodd"
+      />
+    </svg>
+  );
+}
+
+function CartIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true" {...props}>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M2.25 3h1.39c.51 0 .95.34 1.09.83l.38 1.42m0 0L6.6 12.1a1.5 1.5 0 0 0 1.45 1.15h9.1a1.5 1.5 0 0 0 1.45-1.1l1.65-6.02a.75.75 0 0 0-.72-.95H5.11ZM9 19.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm10.5 0a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"
       />
     </svg>
   );

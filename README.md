@@ -2,7 +2,7 @@
 
 A full-stack e-commerce app built with MongoDB, Express, React and Node.js.
 
-> **Status:** Week 1 complete (backend setup + authentication). Week 2 in progress: Products API, React client, product pages and login/register done.
+> **Status:** Week 1 complete (backend setup + authentication). Week 2 complete (Products API, React client, product pages, login/register). Week 3 started: shopping cart done (in the browser), checkout next.
 
 ## Tech stack
 
@@ -110,6 +110,15 @@ Create/update body fields: `name`, `description`, `brand`, `category`, `price`, 
    callers share a single request (`refreshSession` in `client/src/api/client.js`), otherwise the
    second one would look like reuse and end the session.
 
+## How the cart works
+
+The backend has no cart API yet, so the cart is kept in the browser's `localStorage` (one cart per
+browser, shared between logged-in and logged-out visits, and synced across open tabs). Each item
+stores a copy of the product's price and stock, so when the cart page opens it re-fetches every
+product and tells the user if a price changed, stock ran low, or a product was removed. Quantities
+are limited to the available stock and at most 10 per item. Out-of-stock items stay in the cart
+but are left out of the total.
+
 ## Security features
 - Passwords hashed with bcrypt (12 salt rounds) and never returned by the API
 - Users can't make themselves admin at signup; admins are created by a seed script
@@ -136,13 +145,14 @@ client/
 ├── src/
 │   ├── api/                  fetch wrapper (token in memory, refresh + retry on 401), auth calls
 │   ├── components/auth/      AuthCard
+│   ├── components/cart/      AddToCart, CartLine, QuantityStepper
 │   ├── components/layout/    Layout, responsive Navbar, Footer
 │   ├── components/products/  ProductCard, ProductGrid, CategoryFilter, Pagination, StarRating
 │   ├── components/ui/        Error and empty states, text/password fields
-│   ├── context/              AuthProvider: current user, login, register, logout
-│   ├── hooks/                useApi (fetch data, cancel stale requests), useAuth
-│   ├── pages/                Home, Products, ProductDetail, Login, Register, NotFound
-│   ├── utils/                Price formatting, pagination, form validation, safe redirects
+│   ├── context/              AuthProvider (current user, login, logout), CartProvider (cart state)
+│   ├── hooks/                useApi (fetch data, cancel stale requests), useAuth, useCart
+│   ├── pages/                Home, Products, ProductDetail, Cart, Login, Register, NotFound
+│   ├── utils/                Cart logic, price formatting, pagination, form validation, safe redirects
 │   ├── App.jsx               Routes (React Router)
 │   ├── main.jsx              Entry point
 │   └── index.css             Tailwind import + brand theme
