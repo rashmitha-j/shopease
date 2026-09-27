@@ -10,6 +10,7 @@ process.env.JWT_ACCESS_SECRET = 'test-access-secret';
 process.env.JWT_REFRESH_SECRET = 'test-refresh-secret';
 process.env.RAZORPAY_KEY_ID = 'rzp_test_dummy';
 process.env.RAZORPAY_KEY_SECRET = 'test-razorpay-secret';
+process.env.RAZORPAY_WEBHOOK_SECRET = 'test-webhook-secret';
 
 const { default: app } = await import('../app.js');
 const { default: User } = await import('../models/User.js');

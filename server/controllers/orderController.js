@@ -3,6 +3,7 @@ import Order, { PAYMENT_METHODS } from '../models/Order.js';
 import Product from '../models/Product.js';
 import AppError from '../utils/AppError.js';
 import { MAX_ITEMS_PER_ORDER, MAX_QUANTITY_PER_ITEM, calculateTotals, toPaise } from '../utils/pricing.js';
+import { recordRazorpayPayment } from '../services/payments.js';
 import {
   createRazorpayOrder,
   isRazorpayConfigured,
@@ -158,34 +159,14 @@ export const verifyPayment = async (req, res) => {
     throw new AppError('Payment verification failed', 400);
   }
 
-  // Only an order still awaiting payment can be marked paid. The status check makes this
-  // safe against the order being cancelled/expired at the same moment.
-  const paid = await Order.findOneAndUpdate(
-    { _id: order._id, status: 'awaiting_payment' },
-    {
-      $set: {
-        status: 'confirmed',
-        paymentStatus: 'paid',
-        paidAt: new Date(),
-        'razorpay.paymentId': razorpayPaymentId,
-      },
-    },
-    { new: true }
-  );
-  if (paid) return res.json({ success: true, order: paid });
+  // Same logic as the Razorpay webhook (services/payments.js), so whichever arrives
+  // first confirms the order and the other is a harmless no-op.
+  const { result, order: updated } = await recordRazorpayPayment({ razorpayOrderId, paymentId: razorpayPaymentId });
 
-  // Already confirmed by an earlier call (e.g. a retried request): nothing to do
-  if (order.paymentStatus === 'paid' && order.razorpay.paymentId === razorpayPaymentId) {
-    return res.json({ success: true, order });
-  }
+  // 'already_paid': confirmed by an earlier call or by the webhook: nothing to do
+  if (result === 'paid' || result === 'already_paid') return res.json({ success: true, order: updated });
 
-  // The order expired or was cancelled before payment was confirmed. Record the payment
-  // so it can be refunded (a paid + cancelled order means "refund needed").
-  if (order.status === 'cancelled') {
-    await Order.updateOne(
-      { _id: order._id, paymentStatus: { $ne: 'paid' } },
-      { $set: { paymentStatus: 'paid', paidAt: new Date(), 'razorpay.paymentId': razorpayPaymentId } }
-    );
+  if (result === 'refund_due') {
     throw new AppError('This order expired before the payment was confirmed. Your payment will be refunded.', 409);
   }
 

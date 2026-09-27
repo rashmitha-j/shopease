@@ -73,6 +73,7 @@ Other client commands: `npm run build` (production build in `client/dist`), `npm
 | GET | `/api/orders/:id` | Owner or admin | One order |
 | POST | `/api/orders/:id/verify-payment` | Owner | Confirm a Razorpay payment |
 | POST | `/api/orders/:id/cancel` | Owner | Cancel an unpaid order and release its stock |
+| POST | `/api/payments/razorpay/webhook` | Razorpay (signed) | Payment events from Razorpay (see below) |
 
 Protected routes need the header `Authorization: Bearer <accessToken>`.
 
@@ -127,6 +128,28 @@ Create/update body fields: `name`, `description`, `brand`, `category`, `price`, 
   `mongod` does not, and placing orders would fail there.
 - Razorpay keys are optional: set `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` (test mode keys from the
   Razorpay dashboard) to enable online payments. Without them only cash on delivery works.
+
+### Razorpay webhook
+If a customer pays but closes the tab before the browser reports the payment, the webhook still
+confirms the order (otherwise the 30-minute expiry job would cancel a paid order).
+
+- `POST /api/payments/razorpay/webhook` handles `payment.captured` and `order.paid` (both mean the money
+  was captured). `payment.failed` is only logged; other events are acknowledged and ignored.
+- The signature in `X-Razorpay-Signature` is checked against the **raw request body** with
+  `RAZORPAY_WEBHOOK_SECRET` (timing-safe comparison), so this route is mounted before the JSON parser.
+  Nothing in the payload is trusted before that check. The payment's amount and currency (INR) must
+  also match the order.
+- The browser's `verify-payment` call and the webhook use the same code
+  (`server/services/payments.js`). Whichever arrives first confirms the order; the other, and any
+  duplicate event, is a no-op. Paying never touches stock (it was reserved when the order was placed).
+- Responses: `400` bad signature or payload, `503` secret not set, `200` handled or ignored (including
+  unknown orders, so Razorpay stops retrying), `500` temporary failure (Razorpay retries).
+
+**Setup:** in the Razorpay dashboard (test mode) go to *Account & Settings → Webhooks*, add
+`https://<your-server>/api/payments/razorpay/webhook`, select `payment.captured`, `order.paid` and
+`payment.failed`, and choose a secret. Put that secret in `RAZORPAY_WEBHOOK_SECRET` (it is different from
+the key secret). Razorpay must be able to reach the URL, so use the deployed server, or a tunnel such as
+ngrok when testing locally.
 
 ### Try it in Postman / Thunder Client
 1. `POST http://localhost:5000/api/auth/register` with JSON body

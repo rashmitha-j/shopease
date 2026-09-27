@@ -10,6 +10,7 @@ import productRoutes from './routes/productRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
+import webhookRoutes from './routes/webhookRoutes.js';
 import { notFound, errorHandler } from './middleware/error.js';
 
 const app = express();
@@ -24,6 +25,9 @@ app.use(
     credentials: true, // allow the refresh-token cookie
   })
 );
+// Razorpay webhooks need the raw request body for signature checks, so they are
+// mounted before the JSON parser below
+app.use('/api/payments', webhookRoutes);
 app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
