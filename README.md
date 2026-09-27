@@ -2,7 +2,7 @@
 
 A full-stack e-commerce app built with MongoDB, Express, React and Node.js.
 
-> **Status:** Week 1 complete (backend setup + authentication). Week 2 in progress: Products API and React client setup done, product pages next.
+> **Status:** Week 1 complete (backend setup + authentication). Week 2 in progress: Products API, React client and product pages done, login/register next.
 
 ## Tech stack
 
@@ -132,7 +132,11 @@ client/
 ├── src/
 │   ├── api/client.js         fetch wrapper; keeps the access token in memory
 │   ├── components/layout/    Layout, responsive Navbar, Footer
+│   ├── components/products/  ProductCard, ProductGrid, CategoryFilter, Pagination, StarRating
+│   ├── components/ui/        Error and empty states
+│   ├── hooks/useApi.js       Fetch data for a component, cancelling stale requests
 │   ├── pages/                Home, Products, ProductDetail, Login, Register, NotFound
+│   ├── utils/                Price formatting, pagination helper
 │   ├── App.jsx               Routes (React Router)
 │   ├── main.jsx              Entry point
 │   └── index.css             Tailwind import + brand theme
