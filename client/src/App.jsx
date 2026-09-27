@@ -19,6 +19,8 @@ import AdminLayout from './components/admin/AdminLayout.jsx';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage.jsx';
 import AdminSectionPage from './pages/admin/AdminSectionPage.jsx';
 import AdminProductsPage from './pages/admin/AdminProductsPage.jsx';
+import AdminOrdersPage from './pages/admin/AdminOrdersPage.jsx';
+import AdminOrderDetailPage from './pages/admin/AdminOrderDetailPage.jsx';
 import { AdminEditProductPage, AdminNewProductPage } from './pages/admin/AdminProductFormPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
@@ -55,10 +57,8 @@ const router = createBrowserRouter([
               { path: 'products', Component: AdminProductsPage },
               { path: 'products/new', Component: AdminNewProductPage },
               { path: 'products/:slug/edit', Component: AdminEditProductPage },
-              {
-                path: 'orders',
-                element: <AdminSectionPage title="Orders" description="Order management is coming in a later step." />,
-              },
+              { path: 'orders', Component: AdminOrdersPage },
+              { path: 'orders/:id', Component: AdminOrderDetailPage },
               {
                 path: 'reviews',
                 element: (

@@ -2,7 +2,19 @@ import { useEffect, useRef } from 'react';
 
 // Modal confirmation built on the native <dialog> element, which handles focus
 // trapping, the Escape key and the backdrop for us.
-export default function ConfirmDialog({ open, title, message, confirmLabel, busy = false, error, onConfirm, onCancel }) {
+// `danger` (default) shows a red confirm button; pass danger={false} for non-destructive actions
+export default function ConfirmDialog({
+  open,
+  title,
+  message,
+  confirmLabel,
+  cancelLabel = 'Cancel',
+  busy = false,
+  error,
+  danger = true,
+  onConfirm,
+  onCancel,
+}) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -39,13 +51,15 @@ export default function ConfirmDialog({ open, title, message, confirmLabel, busy
             disabled={busy}
             className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-60"
           >
-            Cancel
+            {cancelLabel}
           </button>
           <button
             type="button"
             onClick={onConfirm}
             disabled={busy}
-            className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:cursor-wait disabled:opacity-60"
+            className={`rounded-lg px-4 py-2 text-sm font-semibold text-white disabled:cursor-wait disabled:opacity-60 ${
+              danger ? 'bg-red-600 hover:bg-red-700' : 'bg-brand-600 hover:bg-brand-700'
+            }`}
           >
             {busy ? 'Working…' : confirmLabel}
           </button>
