@@ -68,3 +68,52 @@ export function validateAddress({ fullName, phone, line1, line2 = '', city, stat
         : 'Enter a valid 6-digit PIN code',
   });
 }
+
+// Mirrors the rules in server/models/Product.js. Values are the form's strings.
+const isHttpUrl = (value) => {
+  try {
+    return ['http:', 'https:'].includes(new URL(value.trim()).protocol);
+  } catch {
+    return false;
+  }
+};
+
+export function validateProduct({ name, brand, description, category, price, mrp, stock, imageUrl }) {
+  const text = (value, label, max) => {
+    const v = value.trim();
+    if (!v) return `${label} is required`;
+    if (v.length > max) return `${label} cannot exceed ${max} characters`;
+    return undefined;
+  };
+  const priceNum = Number(price);
+  const priceOk = price.trim() !== '' && Number.isFinite(priceNum) && priceNum >= 0;
+  const mrpNum = Number(mrp);
+  const stockNum = Number(stock);
+
+  return withoutEmpty({
+    name: text(name, 'Name', 120),
+    brand: text(brand, 'Brand', 50),
+    description: text(description, 'Description', 2000),
+    category: category ? undefined : 'Choose a category',
+    price: price.trim() === '' ? 'Price is required' : priceOk ? undefined : 'Enter a price of 0 or more',
+    mrp:
+      mrp.trim() === ''
+        ? undefined
+        : !Number.isFinite(mrpNum) || mrpNum < 0
+          ? 'Enter an MRP of 0 or more, or leave it empty'
+          : priceOk && mrpNum < priceNum
+            ? 'MRP must be greater than or equal to the price'
+            : undefined,
+    stock:
+      stock.trim() === ''
+        ? 'Stock is required'
+        : Number.isInteger(stockNum) && stockNum >= 0
+          ? undefined
+          : 'Stock must be a whole number of 0 or more',
+    imageUrl: !imageUrl.trim()
+      ? 'Image URL is required'
+      : isHttpUrl(imageUrl)
+        ? undefined
+        : 'Enter a full URL starting with https:// or http://',
+  });
+}

@@ -72,3 +72,19 @@ export function PasswordField({ id, label, error, hint, ...inputProps }) {
     </Field>
   );
 }
+
+export function TextAreaField({ id, label, error, hint, rows = 5, ...textareaProps }) {
+  return (
+    <Field id={id} label={label} error={error} hint={hint}>
+      <textarea
+        id={id}
+        name={id}
+        rows={rows}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={describedBy(id, error, hint)}
+        className={`${inputClass(error)} resize-y`}
+        {...textareaProps}
+      />
+    </Field>
+  );
+}

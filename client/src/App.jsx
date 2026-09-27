@@ -18,6 +18,8 @@ import RequireAdmin from './components/auth/RequireAdmin.jsx';
 import AdminLayout from './components/admin/AdminLayout.jsx';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage.jsx';
 import AdminSectionPage from './pages/admin/AdminSectionPage.jsx';
+import AdminProductsPage from './pages/admin/AdminProductsPage.jsx';
+import { AdminEditProductPage, AdminNewProductPage } from './pages/admin/AdminProductFormPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 const router = createBrowserRouter([
@@ -50,10 +52,9 @@ const router = createBrowserRouter([
             Component: AdminLayout,
             children: [
               { index: true, Component: AdminDashboardPage },
-              {
-                path: 'products',
-                element: <AdminSectionPage title="Products" description="Product management is coming in the next step." />,
-              },
+              { path: 'products', Component: AdminProductsPage },
+              { path: 'products/new', Component: AdminNewProductPage },
+              { path: 'products/:slug/edit', Component: AdminEditProductPage },
               {
                 path: 'orders',
                 element: <AdminSectionPage title="Orders" description="Order management is coming in a later step." />,
