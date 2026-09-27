@@ -2,12 +2,13 @@
 
 A full-stack e-commerce app built with MongoDB, Express, React and Node.js.
 
-> **Status:** Week 1 complete (backend setup + authentication). Week 2 in progress: Products API done, React client next.
+> **Status:** Week 1 complete (backend setup + authentication). Week 2 in progress: Products API and React client setup done, product pages next.
 
 ## Tech stack
 
 | Layer | Tools |
 |---|---|
+| Frontend | React 19, Vite, Tailwind CSS 4, React Router |
 | Backend | Node.js, Express 5, Mongoose |
 | Database | MongoDB Atlas |
 | Auth | JWT access + refresh tokens, bcrypt, httpOnly cookies |
@@ -35,6 +36,19 @@ Generate strong JWT secrets with:
 ```bash
 node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 ```
+
+### 3. Run the client
+In a second terminal:
+```bash
+cd client
+npm install
+npm run dev               # starts on http://localhost:5173
+```
+In development Vite forwards every `/api` request to the server on port 5000, so no client `.env`
+is needed. For a deployed build, copy `client/.env.example` to `client/.env` and set `VITE_API_URL`
+to the server's URL.
+
+Other client commands: `npm run build` (production build in `client/dist`), `npm run lint` (oxlint).
 
 ## API reference
 
@@ -112,6 +126,18 @@ server/
 ├── utils/                    Token helpers, AppError, slug/regex helpers
 ├── app.js                    Express app (middleware + routes)
 └── server.js                 Entry point: env check, DB connect, listen
+
+client/
+├── public/favicon.svg
+├── src/
+│   ├── api/client.js         fetch wrapper; keeps the access token in memory
+│   ├── components/layout/    Layout, responsive Navbar, Footer
+│   ├── pages/                Home, Products, ProductDetail, Login, Register, NotFound
+│   ├── App.jsx               Routes (React Router)
+│   ├── main.jsx              Entry point
+│   └── index.css             Tailwind import + brand theme
+├── index.html
+└── vite.config.js            React + Tailwind plugins, /api proxy to the server
 ```
 
 ## Roadmap
