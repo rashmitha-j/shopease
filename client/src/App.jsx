@@ -14,6 +14,10 @@ import CheckoutPage from './pages/CheckoutPage.jsx';
 import OrdersPage from './pages/OrdersPage.jsx';
 import OrderDetailPage from './pages/OrderDetailPage.jsx';
 import RequireAuth from './components/auth/RequireAuth.jsx';
+import RequireAdmin from './components/auth/RequireAdmin.jsx';
+import AdminLayout from './components/admin/AdminLayout.jsx';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage.jsx';
+import AdminSectionPage from './pages/admin/AdminSectionPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 const router = createBrowserRouter([
@@ -35,6 +39,36 @@ const router = createBrowserRouter([
           { path: 'checkout', Component: CheckoutPage },
           { path: 'orders', Component: OrdersPage },
           { path: 'orders/:id', Component: OrderDetailPage },
+        ],
+      },
+      // Admin area: login + admin role required (the API enforces the same rule)
+      {
+        path: 'admin',
+        Component: RequireAdmin,
+        children: [
+          {
+            Component: AdminLayout,
+            children: [
+              { index: true, Component: AdminDashboardPage },
+              {
+                path: 'products',
+                element: <AdminSectionPage title="Products" description="Product management is coming in the next step." />,
+              },
+              {
+                path: 'orders',
+                element: <AdminSectionPage title="Orders" description="Order management is coming in a later step." />,
+              },
+              {
+                path: 'reviews',
+                element: (
+                  <AdminSectionPage
+                    title="Reviews"
+                    description="Customer reviews haven’t been built yet, so there is nothing to moderate."
+                  />
+                ),
+              },
+            ],
+          },
         ],
       },
       { path: '*', Component: NotFoundPage },

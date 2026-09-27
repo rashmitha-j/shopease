@@ -87,6 +87,13 @@ export default function Navbar() {
             <div className="h-9 w-36" aria-hidden="true" />
           ) : user ? (
             <>
+              {user.role === 'admin' && (
+                // Icon only between md and lg, where the navbar is tight; icon + text from lg
+                <NavLink to="/admin" className={(state) => `inline-flex items-center gap-1.5 ${navLinkClass(state)}`}>
+                  <DashboardIcon className="size-5" />
+                  <span className="sr-only lg:not-sr-only">Admin</span>
+                </NavLink>
+              )}
               <NavLink to="/orders" className={navLinkClass}>
                 My orders
               </NavLink>
@@ -149,6 +156,15 @@ export default function Navbar() {
             <div className="border-t border-gray-200 pt-3">
               {user ? (
                 <>
+                  {user.role === 'admin' && (
+                    <NavLink
+                      to="/admin"
+                      onClick={closeMenu}
+                      className={({ isActive }) => `mb-1 block ${navLinkClass({ isActive })}`}
+                    >
+                      Admin
+                    </NavLink>
+                  )}
                   <NavLink
                     to="/orders"
                     onClick={closeMenu}
@@ -263,6 +279,17 @@ function CartIcon(props) {
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M2.25 3h1.39c.51 0 .95.34 1.09.83l.38 1.42m0 0L6.6 12.1a1.5 1.5 0 0 0 1.45 1.15h9.1a1.5 1.5 0 0 0 1.45-1.1l1.65-6.02a.75.75 0 0 0-.72-.95H5.11ZM9 19.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm10.5 0a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"
+      />
+    </svg>
+  );
+}
+
+function DashboardIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true" {...props}>
+      <path
+        strokeLinejoin="round"
+        d="M4 5a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5Zm9 0a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1V5Zm0 8a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-6Zm-9 3a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3Z"
       />
     </svg>
   );
