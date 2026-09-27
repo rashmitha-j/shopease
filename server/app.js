@@ -15,8 +15,10 @@ import { notFound, errorHandler } from './middleware/error.js';
 
 const app = express();
 
-// Render/Railway sit behind a proxy; needed for secure cookies + rate limiting
-app.set('trust proxy', 1);
+// Number of proxies in front of the app, so req.ip is the real client (rate limiting) and
+// secure cookies work. 1 = Render only (default). 2 = Vercel's /api rewrite + Render.
+const trustProxyHops = Number.parseInt(process.env.TRUST_PROXY ?? '1', 10);
+app.set('trust proxy', Number.isInteger(trustProxyHops) && trustProxyHops >= 0 ? trustProxyHops : 1);
 
 app.use(helmet());
 app.use(

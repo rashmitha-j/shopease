@@ -171,6 +171,21 @@ ngrok when testing locally.
    callers share a single request (`refreshSession` in `client/src/api/client.js`), otherwise the
    second one would look like reuse and end the session.
 
+## Deployment (Render + Vercel)
+
+- **Backend (Render):** root directory `server`, build `npm ci --omit=dev`, start `npm start`, health
+  check `/api/health`. Set the variables from `server/.env.example` in Render (never commit them), with
+  `NODE_ENV=production`, `CLIENT_URL=<your Vercel URL>` and `TRUST_PROXY=2`.
+- **Frontend (Vercel):** root directory `client`, framework Vite (build `npm run build`, output `dist`).
+  Leave `VITE_API_URL` empty. Before deploying, replace the placeholder in `client/vercel.json` with your
+  Render URL.
+- `client/vercel.json` forwards `/api/*` to Render, so the browser only talks to the Vercel domain and the
+  refresh cookie is first-party (not blocked as a third-party cookie). Every other path falls back to
+  `index.html`, so links such as `/products/...`, `/orders/...` and `/admin/...` work when opened directly.
+- `TRUST_PROXY` is the number of proxies in front of Express: 1 = Render (default), 2 = Vercel + Render.
+  With the wrong value, all visitors would share one rate-limit bucket (the proxy's IP).
+- In the Razorpay Dashboard, point the webhook to `https://<render-url>/api/payments/razorpay/webhook`.
+
 ## Testing
 
 `cd server && npm test` runs the API tests with Node's built-in test runner and `supertest`. They use
