@@ -2,7 +2,7 @@
 
 A full-stack e-commerce app built with MongoDB, Express, React and Node.js.
 
-> **Status:** Week 1 complete (backend setup + authentication). Week 2 in progress: Products API, React client and product pages done, login/register next.
+> **Status:** Week 1 complete (backend setup + authentication). Week 2 in progress: Products API, React client, product pages and login/register done.
 
 ## Tech stack
 
@@ -105,6 +105,10 @@ Create/update body fields: `name`, `description`, `brand`, `category`, `price`, 
    new pair of tokens is issued.
 4. **Rotation + reuse detection:** only a hash of the latest refresh token is stored. If an old
    refresh token is ever reused (a sign it was stolen), the whole session is revoked.
+5. On page load the app calls `/api/auth/refresh` to restore the session, since the access token
+   is lost on reload. Because of rotation, the client never sends two refreshes at once: parallel
+   callers share a single request (`refreshSession` in `client/src/api/client.js`), otherwise the
+   second one would look like reuse and end the session.
 
 ## Security features
 - Passwords hashed with bcrypt (12 salt rounds) and never returned by the API
@@ -130,13 +134,15 @@ server/
 client/
 ├── public/favicon.svg
 ├── src/
-│   ├── api/client.js         fetch wrapper; keeps the access token in memory
+│   ├── api/                  fetch wrapper (token in memory, refresh + retry on 401), auth calls
+│   ├── components/auth/      AuthCard
 │   ├── components/layout/    Layout, responsive Navbar, Footer
 │   ├── components/products/  ProductCard, ProductGrid, CategoryFilter, Pagination, StarRating
-│   ├── components/ui/        Error and empty states
-│   ├── hooks/useApi.js       Fetch data for a component, cancelling stale requests
+│   ├── components/ui/        Error and empty states, text/password fields
+│   ├── context/              AuthProvider: current user, login, register, logout
+│   ├── hooks/                useApi (fetch data, cancel stale requests), useAuth
 │   ├── pages/                Home, Products, ProductDetail, Login, Register, NotFound
-│   ├── utils/                Price formatting, pagination helper
+│   ├── utils/                Price formatting, pagination, form validation, safe redirects
 │   ├── App.jsx               Routes (React Router)
 │   ├── main.jsx              Entry point
 │   └── index.css             Tailwind import + brand theme

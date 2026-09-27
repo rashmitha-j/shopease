@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Link, NavLink, useNavigate, useSearchParams } from 'react-router';
+import { Link, NavLink, useLocation, useNavigate, useSearchParams } from 'react-router';
+import { useAuth } from '../../hooks/useAuth.js';
 
 const NAV_LINKS = [
   { to: '/', label: 'Home', end: true },
@@ -47,6 +48,18 @@ function SearchForm({ onSearch, className = '' }) {
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
+  const { user, status, logout } = useAuth();
+  const location = useLocation();
+
+  // Return to the current page after logging in. On the login/register pages
+  // themselves, keep passing along wherever the user originally came from.
+  const onAuthPage = ['/login', '/register'].includes(location.pathname);
+  const authLinkState = onAuthPage ? location.state : { from: location.pathname + location.search };
+
+  const handleLogout = async () => {
+    closeMenu();
+    await logout();
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur">
@@ -67,16 +80,39 @@ export default function Navbar() {
 
         <SearchForm className="mx-auto hidden w-full max-w-md md:block" />
 
-        <div className="ml-auto hidden items-center gap-2 md:flex">
-          <Link to="/login" className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600">
-            Log in
-          </Link>
-          <Link
-            to="/register"
-            className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-700"
-          >
-            Sign up
-          </Link>
+        <div className="ml-auto hidden shrink-0 items-center gap-2 md:flex">
+          {status === 'loading' ? (
+            // Reserve the space while the session is being restored, so the navbar doesn't jump
+            <div className="h-9 w-36" aria-hidden="true" />
+          ) : user ? (
+            <>
+              <UserBadge user={user} />
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap text-gray-700 hover:text-brand-600"
+              >
+                Log out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                state={authLinkState}
+                className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-600"
+              >
+                Log in
+              </Link>
+              <Link
+                to="/register"
+                state={authLinkState}
+                className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-700"
+              >
+                Sign up
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile menu button */}
@@ -103,25 +139,70 @@ export default function Navbar() {
               </NavLink>
             ))}
           </div>
-          <div className="grid grid-cols-2 gap-2 border-t border-gray-200 pt-3">
-            <Link
-              to="/login"
-              onClick={closeMenu}
-              className="rounded-lg border border-gray-300 px-4 py-2 text-center text-sm font-medium text-gray-700 hover:bg-gray-50"
-            >
-              Log in
-            </Link>
-            <Link
-              to="/register"
-              onClick={closeMenu}
-              className="rounded-lg bg-brand-600 px-4 py-2 text-center text-sm font-semibold text-white hover:bg-brand-700"
-            >
-              Sign up
-            </Link>
-          </div>
+          {status === 'ready' && (
+            <div className="border-t border-gray-200 pt-3">
+              {user ? (
+                <div className="flex items-center justify-between gap-3">
+                  <UserBadge user={user} showEmail />
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  >
+                    Log out
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-2">
+                  <Link
+                    to="/login"
+                    state={authLinkState}
+                    onClick={closeMenu}
+                    className="rounded-lg border border-gray-300 px-4 py-2 text-center text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    to="/register"
+                    state={authLinkState}
+                    onClick={closeMenu}
+                    className="rounded-lg bg-brand-600 px-4 py-2 text-center text-sm font-semibold text-white hover:bg-brand-700"
+                  >
+                    Sign up
+                  </Link>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
     </header>
+  );
+}
+
+function UserBadge({ user, showEmail = false }) {
+  const firstName = user.name.split(' ')[0];
+
+  return (
+    <div className="flex min-w-0 items-center gap-2">
+      <span
+        className="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-700"
+        title={user.name}
+        aria-hidden="true"
+      >
+        {user.name.charAt(0).toUpperCase()}
+      </span>
+      {/* In the desktop navbar the name only fits from lg up; the avatar alone is shown on md */}
+      <div className={`min-w-0 text-sm leading-tight ${showEmail ? '' : 'sr-only lg:not-sr-only'}`}>
+        <p className="flex items-center gap-1.5 font-medium text-gray-900">
+          <span className="max-w-40 truncate">Hi, {firstName}</span>
+          {user.role === 'admin' && (
+            <span className="rounded bg-amber-100 px-1.5 py-0.5 text-xs font-semibold text-amber-800">Admin</span>
+          )}
+        </p>
+        {showEmail && <p className="truncate text-gray-500">{user.email}</p>}
+      </div>
+    </div>
   );
 }
 
