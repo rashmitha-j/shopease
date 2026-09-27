@@ -4,6 +4,7 @@ import 'dotenv/config';
 import mongoose from 'mongoose';
 import Product from '../models/Product.js';
 import User from '../models/User.js';
+import Review from '../models/Review.js';
 import sampleProducts from '../data/products.js';
 
 const { MONGO_URI, NODE_ENV } = process.env;
@@ -26,6 +27,7 @@ try {
   if (!admin) console.warn('No admin user found; products will have no createdBy. Run `npm run seed:admin` first.');
 
   const { deletedCount } = await Product.deleteMany({});
+  await Review.deleteMany({}); // reviews of the removed products would be orphaned
   // create() (not insertMany) so the slug-generating save hooks run for each product
   const created = await Product.create(sampleProducts.map((p) => ({ ...p, createdBy: admin?._id })));
 

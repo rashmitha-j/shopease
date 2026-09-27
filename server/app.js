@@ -9,6 +9,7 @@ import userRoutes from './routes/userRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import reviewRoutes from './routes/reviewRoutes.js';
 import { notFound, errorHandler } from './middleware/error.js';
 
 const app = express();
@@ -36,6 +37,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

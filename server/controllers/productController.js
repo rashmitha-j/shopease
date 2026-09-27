@@ -1,4 +1,5 @@
 import Product, { CATEGORIES } from '../models/Product.js';
+import Review from '../models/Review.js';
 import AppError from '../utils/AppError.js';
 import { escapeRegex } from '../utils/strings.js';
 
@@ -141,6 +142,7 @@ export const updateProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   const product = await Product.findByIdAndDelete(req.params.id);
   if (!product) throw new AppError('Product not found', 404);
+  await Review.deleteMany({ product: product._id }); // don't leave reviews of a product that no longer exists
 
   res.json({ success: true, message: 'Product deleted' });
 };

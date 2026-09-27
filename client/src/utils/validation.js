@@ -117,3 +117,21 @@ export function validateProduct({ name, brand, description, category, price, mrp
         : 'Enter a full URL starting with https:// or http://',
   });
 }
+
+// Mirrors server/models/Review.js
+export const REVIEW_MIN_LENGTH = 10;
+export const REVIEW_MAX_LENGTH = 1000;
+
+export function validateReview({ rating, comment }) {
+  const text = comment.trim();
+  return withoutEmpty({
+    rating: Number.isInteger(rating) && rating >= 1 && rating <= 5 ? undefined : 'Choose a rating from 1 to 5 stars',
+    comment: !text
+      ? 'Write a few words about the product'
+      : text.length < REVIEW_MIN_LENGTH
+        ? `Your review must be at least ${REVIEW_MIN_LENGTH} characters`
+        : text.length > REVIEW_MAX_LENGTH
+          ? `Your review cannot exceed ${REVIEW_MAX_LENGTH} characters`
+          : undefined,
+  });
+}

@@ -4,6 +4,7 @@ import { useApi } from '../hooks/useApi.js';
 import { discountPercent, formatPrice } from '../utils/format.js';
 import StarRating from '../components/products/StarRating.jsx';
 import AddToCart from '../components/cart/AddToCart.jsx';
+import ProductReviews from '../components/reviews/ProductReviews.jsx';
 import { EmptyState, ErrorState } from '../components/ui/StatusMessage.jsx';
 
 export default function ProductDetailPage() {
@@ -99,6 +100,9 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* key resets sort/page when switching products; onChanged refreshes the rating shown above */}
+      <ProductReviews key={product._id} slug={product.slug} onChanged={retry} />
     </>
   );
 }

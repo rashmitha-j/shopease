@@ -15,16 +15,17 @@ const { default: app } = await import('../app.js');
 const { default: User } = await import('../models/User.js');
 const { default: Product } = await import('../models/Product.js');
 const { default: Order } = await import('../models/Order.js');
+const { default: Review } = await import('../models/Review.js');
 const { signAccessToken } = await import('../utils/tokens.js');
 
-export { app, User, Product, Order, request };
+export { app, User, Product, Order, Review, request };
 
 let replSet;
 
 export async function startDatabase() {
   replSet = await MongoMemoryReplSet.create({ replSet: { count: 1, storageEngine: 'wiredTiger' } });
   await mongoose.connect(replSet.getUri());
-  await Promise.all([User.init(), Product.init(), Order.init()]); // build unique indexes
+  await Promise.all([User.init(), Product.init(), Order.init(), Review.init()]); // build unique indexes
 }
 
 export async function stopDatabase() {
@@ -33,7 +34,7 @@ export async function stopDatabase() {
 }
 
 export async function clearDatabase() {
-  await Promise.all([User.deleteMany({}), Product.deleteMany({}), Order.deleteMany({})]);
+  await Promise.all([User.deleteMany({}), Product.deleteMany({}), Order.deleteMany({}), Review.deleteMany({})]);
 }
 
 let userCount = 0;

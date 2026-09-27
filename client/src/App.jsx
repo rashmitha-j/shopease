@@ -17,10 +17,10 @@ import RequireAuth from './components/auth/RequireAuth.jsx';
 import RequireAdmin from './components/auth/RequireAdmin.jsx';
 import AdminLayout from './components/admin/AdminLayout.jsx';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage.jsx';
-import AdminSectionPage from './pages/admin/AdminSectionPage.jsx';
 import AdminProductsPage from './pages/admin/AdminProductsPage.jsx';
 import AdminOrdersPage from './pages/admin/AdminOrdersPage.jsx';
 import AdminOrderDetailPage from './pages/admin/AdminOrderDetailPage.jsx';
+import AdminReviewsPage from './pages/admin/AdminReviewsPage.jsx';
 import { AdminEditProductPage, AdminNewProductPage } from './pages/admin/AdminProductFormPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
@@ -59,15 +59,7 @@ const router = createBrowserRouter([
               { path: 'products/:slug/edit', Component: AdminEditProductPage },
               { path: 'orders', Component: AdminOrdersPage },
               { path: 'orders/:id', Component: AdminOrderDetailPage },
-              {
-                path: 'reviews',
-                element: (
-                  <AdminSectionPage
-                    title="Reviews"
-                    description="Customer reviews haven’t been built yet, so there is nothing to moderate."
-                  />
-                ),
-              },
+              { path: 'reviews', Component: AdminReviewsPage },
             ],
           },
         ],
