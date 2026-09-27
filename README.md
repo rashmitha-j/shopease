@@ -2,7 +2,7 @@
 
 A full-stack e-commerce app built with MongoDB, Express, React and Node.js.
 
-> **Status:** Week 1 complete (backend setup + authentication)
+> **Status:** Week 1 complete (backend setup + authentication). Week 2 in progress: Products API done, React client next.
 
 ## Tech stack
 
@@ -27,6 +27,7 @@ cd server
 npm install
 cp .env.example .env      # then paste your MONGO_URI and set the JWT secrets
 npm run seed:admin        # creates the admin account from ADMIN_* in .env
+npm run seed:products     # replaces all products with 20 sample products
 npm run dev               # starts on http://localhost:5000
 ```
 
@@ -46,8 +47,34 @@ node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 | POST | `/api/auth/logout` | Refresh cookie | Log out and revoke the refresh token |
 | GET | `/api/auth/me` | Logged in | Current user's profile |
 | GET | `/api/users?page=1&limit=10` | Admin | Paginated list of users |
+| GET | `/api/products` | Public | Search, filter, sort and paginate products (see below) |
+| GET | `/api/products/categories` | Public | Every category with its product count |
+| GET | `/api/products/:slug` | Public | One product, e.g. `/api/products/true-wireless-earbuds` |
+| POST | `/api/products` | Admin | Create a product |
+| PATCH | `/api/products/:id` | Admin | Update some fields of a product |
+| DELETE | `/api/products/:id` | Admin | Delete a product |
 
 Protected routes need the header `Authorization: Bearer <accessToken>`.
+
+### Product search and filters
+All query parameters for `GET /api/products` are optional and can be combined:
+
+| Parameter | Example | Meaning |
+|---|---|---|
+| `q` | `q=earbuds` | Search in name and brand (case-insensitive, partial words match) |
+| `category` | `category=Electronics` | One of Electronics, Fashion, Home, Books, Sports, Beauty |
+| `brand` | `brand=sonic` | Exact brand (case-insensitive) |
+| `minPrice`, `maxPrice` | `minPrice=500&maxPrice=2000` | Price range in INR |
+| `minRating` | `minRating=4` | Rating of at least 0 to 5 |
+| `inStock` | `inStock=true` | Only products with stock left |
+| `sort` | `sort=price_asc` | `newest` (default), `price_asc`, `price_desc`, `rating` |
+| `page`, `limit` | `page=2&limit=12` | Pagination (default 12 per page, max 100) |
+
+Response: `{ success, products, page, pages, total }`.
+
+Create/update body fields: `name`, `description`, `brand`, `category`, `price`, `mrp` (optional, must be ≥ price),
+`images` (`[{ "url": "..." }]`, at least one), `stock`, `isFeatured`. The `slug` is generated from the name, and
+`rating`/`numReviews` can't be set through the API.
 
 ### Try it in Postman / Thunder Client
 1. `POST http://localhost:5000/api/auth/register` with JSON body
@@ -76,12 +103,13 @@ Protected routes need the header `Authorization: Bearer <accessToken>`.
 ```
 server/
 ├── config/db.js              MongoDB connection
-├── controllers/              Route logic (auth, users)
+├── controllers/              Route logic (auth, users, products)
 ├── middleware/               protect, authorize, error handling
-├── models/User.js            User schema with addresses
+├── data/products.js          Sample catalogue for seeding
+├── models/                   User (with addresses), Product
 ├── routes/                   Express routers
-├── scripts/seedAdmin.js      Creates the admin account
-├── utils/                    Token helpers, AppError
+├── scripts/                  seedAdmin.js, seedProducts.js
+├── utils/                    Token helpers, AppError, slug/regex helpers
 ├── app.js                    Express app (middleware + routes)
 └── server.js                 Entry point: env check, DB connect, listen
 ```
