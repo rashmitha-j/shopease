@@ -1,6 +1,7 @@
 import 'dotenv/config'; // must be the first import so env vars exist before app.js loads
 import app from './app.js';
 import connectDB from './config/db.js';
+import { startExpiredOrderJob } from './jobs/releaseExpiredOrders.js';
 
 const REQUIRED_ENV = ['MONGO_URI', 'JWT_ACCESS_SECRET', 'JWT_REFRESH_SECRET'];
 const missing = REQUIRED_ENV.filter((key) => !process.env[key]);
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 5000;
 connectDB()
   .then(() => {
     app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+    startExpiredOrderJob();
   })
   .catch((err) => {
     console.error('Database connection failed:', err.message);

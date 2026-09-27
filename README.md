@@ -2,7 +2,7 @@
 
 A full-stack e-commerce app built with MongoDB, Express, React and Node.js.
 
-> **Status:** Week 1 complete (backend setup + authentication). Week 2 complete (Products API, React client, product pages, login/register). Week 3 started: shopping cart done (in the browser), checkout next.
+> **Status:** Week 1 complete (backend setup + authentication). Week 2 complete (Products API, React client, product pages, login/register). Week 3 in progress: shopping cart (in the browser) and the Orders + Razorpay API done, checkout pages next.
 
 ## Tech stack
 
@@ -30,6 +30,7 @@ cp .env.example .env      # then paste your MONGO_URI and set the JWT secrets
 npm run seed:admin        # creates the admin account from ADMIN_* in .env
 npm run seed:products     # replaces all products with 20 sample products
 npm run dev               # starts on http://localhost:5000
+npm test                  # runs the API tests (see Testing below)
 ```
 
 Generate strong JWT secrets with:
@@ -67,6 +68,11 @@ Other client commands: `npm run build` (production build in `client/dist`), `npm
 | POST | `/api/products` | Admin | Create a product |
 | PATCH | `/api/products/:id` | Admin | Update some fields of a product |
 | DELETE | `/api/products/:id` | Admin | Delete a product |
+| POST | `/api/orders` | Logged in | Place an order (reserves stock; see below) |
+| GET | `/api/orders/mine?page=1&limit=10` | Logged in | My orders, newest first |
+| GET | `/api/orders/:id` | Owner or admin | One order |
+| POST | `/api/orders/:id/verify-payment` | Owner | Confirm a Razorpay payment |
+| POST | `/api/orders/:id/cancel` | Owner | Cancel an unpaid order and release its stock |
 
 Protected routes need the header `Authorization: Bearer <accessToken>`.
 
@@ -90,6 +96,31 @@ Create/update body fields: `name`, `description`, `brand`, `category`, `price`, 
 `images` (`[{ "url": "..." }]`, at least one), `stock`, `isFeatured`. The `slug` is generated from the name, and
 `rating`/`numReviews` can't be set through the API.
 
+### Orders and payments
+`POST /api/orders` body:
+```json
+{
+  "items": [{ "productId": "<id>", "quantity": 2 }],
+  "shippingAddress": { "fullName": "Rashmi J", "phone": "9876543210", "line1": "12 MG Road",
+                       "city": "Bengaluru", "state": "Karnataka", "postalCode": "560001" },
+  "paymentMethod": "razorpay"
+}
+```
+- **Prices come from the database**, never from the request. Shipping is free from ₹999, otherwise ₹49.
+  Quantities are 1–10 per product.
+- **Stock is reserved in a MongoDB transaction** when the order is placed: either every item is
+  reserved or none is, and two customers can't both buy the last item.
+- **Cash on delivery (`cod`)** orders are confirmed immediately.
+- **Razorpay (`razorpay`)** orders start as `awaiting_payment`; the response includes
+  `razorpay: { keyId, orderId, amount, currency }` for opening Razorpay Checkout. After paying, the
+  client sends `razorpay_order_id`, `razorpay_payment_id` and `razorpay_signature` to
+  `verify-payment`, which checks the HMAC-SHA256 signature with the key secret.
+- Unpaid Razorpay orders are **cancelled after 30 minutes** by a background job and their stock is
+  released. A payment that arrives after that is recorded (`paymentStatus: paid`, `status: cancelled`)
+  so it can be refunded.
+- Razorpay keys are optional: set `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` (test mode keys from the
+  Razorpay dashboard) to enable online payments. Without them only cash on delivery works.
+
 ### Try it in Postman / Thunder Client
 1. `POST http://localhost:5000/api/auth/register` with JSON body
    `{ "name": "Rashmi", "email": "rashmi@test.com", "password": "secret123" }`
@@ -109,6 +140,14 @@ Create/update body fields: `name`, `description`, `brand`, `category`, `price`, 
    is lost on reload. Because of rotation, the client never sends two refreshes at once: parallel
    callers share a single request (`refreshSession` in `client/src/api/client.js`), otherwise the
    second one would look like reuse and end the session.
+
+## Testing
+
+`cd server && npm test` runs the API tests with Node's built-in test runner and `supertest`. They use
+`mongodb-memory-server` (a temporary in-memory MongoDB replica set, downloaded on first run), so no
+Atlas connection or `.env` is needed, and Razorpay is replaced by a fake client. They cover placing
+orders, stock reservation and rollback, two buyers racing for the last item, payment signature
+checks, cancelling, the 30-minute expiry, and who can see which orders.
 
 ## How the cart works
 
@@ -130,13 +169,15 @@ but are left out of the total.
 ```
 server/
 ├── config/db.js              MongoDB connection
-├── controllers/              Route logic (auth, users, products)
+├── controllers/              Route logic (auth, users, products, orders)
 ├── middleware/               protect, authorize, error handling
 ├── data/products.js          Sample catalogue for seeding
-├── models/                   User (with addresses), Product
+├── jobs/                     Cancels unpaid online orders after 30 minutes
+├── models/                   User (with addresses), Product, Order
 ├── routes/                   Express routers
 ├── scripts/                  seedAdmin.js, seedProducts.js
-├── utils/                    Token helpers, AppError, slug/regex helpers
+├── tests/                    API tests (node:test + supertest + in-memory MongoDB)
+├── utils/                    Token helpers, AppError, slug/regex, pricing, Razorpay
 ├── app.js                    Express app (middleware + routes)
 └── server.js                 Entry point: env check, DB connect, listen
 
