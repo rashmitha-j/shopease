@@ -87,6 +87,9 @@ export default function Navbar() {
             <div className="h-9 w-36" aria-hidden="true" />
           ) : user ? (
             <>
+              <NavLink to="/orders" className={navLinkClass}>
+                My orders
+              </NavLink>
               <UserBadge user={user} />
               <button
                 type="button"
@@ -145,16 +148,25 @@ export default function Navbar() {
           {status === 'ready' && (
             <div className="border-t border-gray-200 pt-3">
               {user ? (
-                <div className="flex items-center justify-between gap-3">
-                  <UserBadge user={user} showEmail />
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                <>
+                  <NavLink
+                    to="/orders"
+                    onClick={closeMenu}
+                    className={({ isActive }) => `mb-3 block ${navLinkClass({ isActive })}`}
                   >
-                    Log out
-                  </button>
-                </div>
+                    My orders
+                  </NavLink>
+                  <div className="flex items-center justify-between gap-3">
+                    <UserBadge user={user} showEmail />
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                    >
+                      Log out
+                    </button>
+                  </div>
+                </>
               ) : (
                 <div className="grid grid-cols-2 gap-2">
                   <Link

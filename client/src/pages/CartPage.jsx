@@ -127,24 +127,27 @@ export default function CartPage() {
           </dl>
           <p className="mt-1 text-xs text-gray-500">Shipping is calculated at checkout.</p>
 
-          <button
-            type="button"
-            disabled
-            className="mt-6 w-full cursor-not-allowed rounded-lg bg-brand-600 px-4 py-3 font-semibold text-white opacity-50"
-          >
-            Proceed to checkout
-          </button>
-          <p className="mt-2 text-center text-xs text-gray-500">
-            Checkout is coming soon.
-            {hasOutOfStock && ' Remove out-of-stock items before checking out.'}
-          </p>
+          {hasOutOfStock ? (
+            <>
+              <button
+                type="button"
+                disabled
+                className="mt-6 w-full cursor-not-allowed rounded-lg bg-brand-600 px-4 py-3 font-semibold text-white opacity-50"
+              >
+                Proceed to checkout
+              </button>
+              <p className="mt-2 text-center text-xs text-gray-500">Remove out-of-stock items before checking out.</p>
+            </>
+          ) : (
+            <Link
+              to="/checkout"
+              className="mt-6 block w-full rounded-lg bg-brand-600 px-4 py-3 text-center font-semibold text-white shadow-sm hover:bg-brand-700"
+            >
+              Proceed to checkout
+            </Link>
+          )}
           {!user && (
-            <p className="mt-4 text-center text-sm text-gray-600">
-              <Link to="/login" state={{ from: '/cart' }} className="font-semibold text-brand-600 hover:text-brand-700">
-                Log in
-              </Link>{' '}
-              to check out when it’s ready.
-            </p>
+            <p className="mt-3 text-center text-xs text-gray-500">You’ll be asked to log in before paying.</p>
           )}
         </aside>
       </div>

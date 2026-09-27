@@ -2,7 +2,7 @@
 
 A full-stack e-commerce app built with MongoDB, Express, React and Node.js.
 
-> **Status:** Week 1 complete (backend setup + authentication). Week 2 complete (Products API, React client, product pages, login/register). Week 3 in progress: shopping cart (in the browser) and the Orders + Razorpay API done, checkout pages next.
+> **Status:** Week 1 complete (backend setup + authentication). Week 2 complete (Products API, React client, product pages, login/register). Week 3 complete: shopping cart, checkout with Razorpay or cash on delivery, and order history.
 
 ## Tech stack
 
@@ -118,6 +118,13 @@ Create/update body fields: `name`, `description`, `brand`, `category`, `price`, 
 - Unpaid Razorpay orders are **cancelled after 30 minutes** by a background job and their stock is
   released. A payment that arrives after that is recorded (`paymentStatus: paid`, `status: cancelled`)
   so it can be refunded.
+- **Checkout in the browser:** the checkout page loads Razorpay's `checkout.js` only when needed and
+  opens the payment window with the server's Razorpay order. If the window is closed without paying,
+  the order is cancelled at once so its stock is released (the window also times out after 15 minutes,
+  inside the server's 30-minute limit). After a successful payment the order is never cancelled by the
+  browser; if confirming it fails, the order page explains what happens next.
+- Transactions need a replica set: MongoDB Atlas (including the free tier) works; a standalone local
+  `mongod` does not, and placing orders would fail there.
 - Razorpay keys are optional: set `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` (test mode keys from the
   Razorpay dashboard) to enable online payments. Without them only cash on delivery works.
 
@@ -185,15 +192,18 @@ client/
 ├── public/favicon.svg
 ├── src/
 │   ├── api/                  fetch wrapper (token in memory, refresh + retry on 401), auth calls
-│   ├── components/auth/      AuthCard
+│   ├── components/auth/      AuthCard, RequireAuth (redirects visitors to /login)
+│   ├── components/checkout/  AddressForm
+│   ├── components/orders/    OrderStatusBadge
 │   ├── components/cart/      AddToCart, CartLine, QuantityStepper
 │   ├── components/layout/    Layout, responsive Navbar, Footer
 │   ├── components/products/  ProductCard, ProductGrid, CategoryFilter, Pagination, StarRating
 │   ├── components/ui/        Error and empty states, text/password fields
 │   ├── context/              AuthProvider (current user, login, logout), CartProvider (cart state)
 │   ├── hooks/                useApi (fetch data, cancel stale requests), useAuth, useCart
-│   ├── pages/                Home, Products, ProductDetail, Cart, Login, Register, NotFound
-│   ├── utils/                Cart logic, price formatting, pagination, form validation, safe redirects
+│   ├── pages/                Home, Products, ProductDetail, Cart, Checkout, Orders, OrderDetail,
+│   │                         Login, Register, NotFound
+│   ├── utils/                Cart logic, order display helpers, Razorpay script loader, validation, …
 │   ├── App.jsx               Routes (React Router)
 │   ├── main.jsx              Entry point
 │   └── index.css             Tailwind import + brand theme

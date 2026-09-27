@@ -38,3 +38,33 @@ export function validateRegister({ name, email, password, confirmPassword }) {
     confirmPassword: password && confirmPassword !== password ? 'Passwords do not match' : undefined,
   });
 }
+
+// Mirrors the shipping address rules in server/models/Order.js
+export const normalizePhone = (phone) =>
+  String(phone).replace(/\D/g, '').replace(/^(91|0)(?=\d{10}$)/, ''); // "+91 98765-43210" -> "9876543210"
+
+export function validateAddress({ fullName, phone, line1, line2 = '', city, state, postalCode }) {
+  const required = (value, label, max) => {
+    const v = value.trim();
+    if (!v) return `${label} is required`;
+    if (v.length > max) return `${label} cannot exceed ${max} characters`;
+    return undefined;
+  };
+  return withoutEmpty({
+    fullName: required(fullName, 'Full name', 60),
+    phone: !phone.trim()
+      ? 'Phone number is required'
+      : /^[6-9]\d{9}$/.test(normalizePhone(phone))
+        ? undefined
+        : 'Enter a valid 10-digit mobile number',
+    line1: required(line1, 'Address', 120),
+    line2: line2.trim().length > 120 ? 'Address line 2 cannot exceed 120 characters' : undefined,
+    city: required(city, 'City', 60),
+    state: state ? undefined : 'Choose a state',
+    postalCode: !postalCode.trim()
+      ? 'PIN code is required'
+      : /^[1-9]\d{5}$/.test(postalCode.trim())
+        ? undefined
+        : 'Enter a valid 6-digit PIN code',
+  });
+}

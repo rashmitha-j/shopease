@@ -10,6 +10,10 @@ import ProductDetailPage from './pages/ProductDetailPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import CartPage from './pages/CartPage.jsx';
+import CheckoutPage from './pages/CheckoutPage.jsx';
+import OrdersPage from './pages/OrdersPage.jsx';
+import OrderDetailPage from './pages/OrderDetailPage.jsx';
+import RequireAuth from './components/auth/RequireAuth.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 const router = createBrowserRouter([
@@ -24,6 +28,15 @@ const router = createBrowserRouter([
       { path: 'login', Component: LoginPage },
       { path: 'register', Component: RegisterPage },
       { path: 'cart', Component: CartPage },
+      // Pages below need a logged-in user; visitors are sent to /login and brought back
+      {
+        Component: RequireAuth,
+        children: [
+          { path: 'checkout', Component: CheckoutPage },
+          { path: 'orders', Component: OrdersPage },
+          { path: 'orders/:id', Component: OrderDetailPage },
+        ],
+      },
       { path: '*', Component: NotFoundPage },
     ],
   },
