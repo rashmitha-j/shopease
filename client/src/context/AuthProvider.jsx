@@ -14,7 +14,9 @@ export default function AuthProvider({ children }) {
     authApi
       .restoreSession()
       .then((restoredUser) => active && setUser(restoredUser))
-      .catch(() => {}) // no valid refresh cookie: the visitor is simply logged out
+      // No valid refresh cookie (401): the visitor is logged out. If the server couldn't be
+      // reached, the session isn't cleared; the visitor just can't be shown as logged in yet.
+      .catch(() => {})
       .finally(() => active && setStatus('ready'));
 
     setSessionExpiredHandler(() => setUser(null));
