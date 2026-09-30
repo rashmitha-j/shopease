@@ -105,9 +105,9 @@ function CategoryTiles() {
   return (
     <section id="categories" aria-labelledby="categories-heading" className="mt-16 scroll-mt-24">
       <SectionHeading id="categories-heading" title="Shop by category" subtitle="Find exactly what you’re after" />
-      <ul className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+      <ul className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6" aria-busy={!data}>
         {!data
-          ? Array.from({ length: 6 }, (_, i) => <li key={i} className="h-36 animate-pulse rounded-2xl bg-slate-200" />)
+          ? Array.from({ length: 6 }, (_, i) => <CategoryTileSkeleton key={i} />)
           : data.categories.map(({ name, count }) => {
               const style = CATEGORY_STYLES[name] ?? DEFAULT_STYLE;
               return (
@@ -134,6 +134,17 @@ function CategoryTiles() {
   );
 }
 
+// Same shape as a category tile: icon chip, name and count
+function CategoryTileSkeleton() {
+  return (
+    <li className="flex h-36 flex-col items-center justify-center gap-3 rounded-2xl bg-white ring-1 ring-slate-900/5" aria-hidden="true">
+      <span className="skeleton size-12 rounded-2xl" />
+      <span className="skeleton h-4 w-20 rounded-md" />
+      <span className="skeleton h-3 w-12 rounded-md" />
+    </li>
+  );
+}
+
 function FeaturedProducts() {
   // The API has no "featured" filter, so fetch up to its maximum page size (100)
   // and pick the featured products here.
@@ -154,7 +165,7 @@ function FeaturedProducts() {
           </Link>
         }
       />
-      <div className="mt-6">
+      <div className="mt-6" aria-busy={!featured && !error}>
         {error ? (
           <ErrorState message={error.message} onRetry={retry} />
         ) : !featured ? (

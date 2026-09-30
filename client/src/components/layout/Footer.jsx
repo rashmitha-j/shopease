@@ -9,7 +9,7 @@ const CATEGORIES = ['Electronics', 'Fashion', 'Home', 'Books', 'Sports', 'Beauty
 const linkClass = 'text-sm text-slate-300 transition hover:text-white';
 
 export default function Footer() {
-  const { user, status } = useAuth();
+  const { user } = useAuth();
 
   return (
     <footer className="relative mt-20 overflow-hidden bg-slate-950 text-slate-300">
@@ -57,7 +57,8 @@ export default function Footer() {
         </FooterColumn>
 
         <FooterColumn title="Account">
-          {status === 'ready' && !user ? (
+          {/* Shown straight away, like the navbar; replaced once a login is confirmed */}
+          {!user ? (
             <>
               <li>
                 <Link to="/login" className={linkClass}>
