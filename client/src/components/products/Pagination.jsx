@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import { getPageItems } from '../../utils/pagination.js';
 
-const base = 'inline-flex h-10 min-w-10 items-center justify-center rounded-lg px-3 text-sm font-medium';
+const base = 'inline-flex h-10 min-w-10 items-center justify-center rounded-xl px-3 text-sm font-medium';
 
 // Page links are real <a> tags (not buttons), so each page has its own URL
 // and works with the back button, new tabs and bookmarks.
@@ -9,11 +9,11 @@ export default function Pagination({ page, pages, getSearch }) {
   if (pages <= 1) return null;
 
   const pageLink = (n, label, extra = {}) => (
-    <Link to={{ search: getSearch(n) }} className={`${base} text-gray-700 hover:bg-gray-100`} {...extra}>
+    <Link to={{ search: getSearch(n) }} className={`${base} text-slate-700 hover:bg-white hover:shadow-sm`} {...extra}>
       {label}
     </Link>
   );
-  const disabled = (label) => <span className={`${base} cursor-not-allowed text-gray-300`}>{label}</span>;
+  const disabled = (label) => <span className={`${base} cursor-not-allowed text-slate-400`}>{label}</span>;
 
   return (
     <nav aria-label="Pagination" className="flex items-center justify-center gap-1">
@@ -23,13 +23,13 @@ export default function Pagination({ page, pages, getSearch }) {
       <ul className="hidden items-center gap-1 sm:flex">
         {getPageItems(page, pages).map((item, i) =>
           item === '…' ? (
-            <li key={`gap-${i}`} className="px-1 text-gray-400">
+            <li key={`gap-${i}`} className="px-1 text-slate-400">
               …
             </li>
           ) : (
             <li key={item}>
               {item === page ? (
-                <span aria-current="page" className={`${base} bg-brand-600 text-white`}>
+                <span aria-current="page" className={`${base} bg-linear-to-r from-brand-600 to-purple-600 text-white shadow-md shadow-brand-600/20`}>
                   {item}
                 </span>
               ) : (
@@ -39,7 +39,7 @@ export default function Pagination({ page, pages, getSearch }) {
           ),
         )}
       </ul>
-      <span className="px-2 text-sm text-gray-600 sm:hidden">
+      <span className="px-2 text-sm text-slate-600 sm:hidden">
         Page {page} of {pages}
       </span>
 

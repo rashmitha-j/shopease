@@ -4,7 +4,7 @@ export default function Stars({ rating, size = 'text-base', className = '' }) {
   return (
     <span className={`inline-flex leading-none ${size} ${className}`} role="img" aria-label={`Rated ${rating} out of 5`}>
       {[1, 2, 3, 4, 5].map((n) => (
-        <span key={n} aria-hidden="true" className={n <= filled ? 'text-amber-500' : 'text-gray-300'}>
+        <span key={n} aria-hidden="true" className={n <= filled ? 'text-amber-500' : 'text-slate-300'}>
           ★
         </span>
       ))}

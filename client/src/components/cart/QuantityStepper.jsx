@@ -1,15 +1,15 @@
 const buttonClass =
-  'flex size-9 items-center justify-center text-lg text-gray-700 hover:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-transparent';
+  'flex size-10 items-center justify-center text-lg text-slate-700 transition hover:bg-brand-50 hover:text-brand-700 disabled:cursor-not-allowed disabled:text-slate-300 disabled:hover:bg-transparent';
 
 export default function QuantityStepper({ value, min = 1, max, onChange, label }) {
   return (
-    <div className="inline-flex items-center rounded-lg border border-gray-300 bg-white" role="group" aria-label={label}>
+    <div className="inline-flex items-center rounded-xl border border-slate-300 bg-white shadow-sm" role="group" aria-label={label}>
       <button
         type="button"
         onClick={() => onChange(value - 1)}
         disabled={value <= min}
         aria-label="Decrease quantity"
-        className={`${buttonClass} rounded-l-lg`}
+        className={`${buttonClass} rounded-l-xl`}
       >
         −
       </button>
@@ -21,7 +21,7 @@ export default function QuantityStepper({ value, min = 1, max, onChange, label }
         onClick={() => onChange(value + 1)}
         disabled={value >= max}
         aria-label="Increase quantity"
-        className={`${buttonClass} rounded-r-lg`}
+        className={`${buttonClass} rounded-r-xl`}
       >
         +
       </button>

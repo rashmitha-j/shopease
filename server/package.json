@@ -9,6 +9,7 @@
     "start": "node server.js",
     "seed:admin": "node scripts/seedAdmin.js",
     "seed:products": "node scripts/seedProducts.js",
+    "update:images": "node scripts/updateProductImages.js",
     "test": "node --test --test-concurrency=1 \"tests/**/*.test.js\""
   },
   "dependencies": {

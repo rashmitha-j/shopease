@@ -18,7 +18,7 @@ export default function AddToCart({ product }) {
       <button
         type="button"
         disabled
-        className="mt-6 w-full cursor-not-allowed rounded-lg bg-gray-200 px-6 py-3 font-semibold text-gray-500 sm:w-auto"
+        className="mt-6 w-full cursor-not-allowed rounded-xl bg-slate-200 px-6 py-3 font-semibold text-slate-600 sm:w-auto"
       >
         Out of stock
       </button>
@@ -39,13 +39,13 @@ export default function AddToCart({ product }) {
           <button
             type="button"
             onClick={handleAdd}
-            className="flex-1 rounded-lg bg-brand-600 px-6 py-3 font-semibold text-white shadow-sm hover:bg-brand-700 sm:flex-none"
+            className="btn-primary flex-1 px-8 py-3 text-base sm:flex-none"
           >
             Add to cart
           </button>
         </div>
       ) : (
-        <p className="text-sm text-gray-700">
+        <p className="text-sm text-slate-700">
           You have the maximum quantity ({inCart}) of this item in your cart.
         </p>
       )}
@@ -53,18 +53,18 @@ export default function AddToCart({ product }) {
       <p role="status" className="mt-3 min-h-5 text-sm">
         {added > 0 && (
           <>
-            <span className="font-medium text-green-700">
+            <span className="font-medium text-emerald-700">
               Added {added} to your cart.
             </span>{' '}
-            <Link to="/cart" className="font-semibold text-brand-600 hover:text-brand-700">
+            <Link to="/cart" className="font-semibold text-brand-600 hover:text-brand-800">
               View cart →
             </Link>
           </>
         )}
         {added === 0 && inCart > 0 && (
-          <span className="text-gray-600">
+          <span className="text-slate-600">
             {inCart} already in your cart.{' '}
-            <Link to="/cart" className="font-semibold text-brand-600 hover:text-brand-700">
+            <Link to="/cart" className="font-semibold text-brand-600 hover:text-brand-800">
               View cart →
             </Link>
           </span>

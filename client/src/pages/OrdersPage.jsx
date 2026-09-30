@@ -17,7 +17,7 @@ export default function OrdersPage() {
   return (
     <>
       <title>My orders | ShopEase</title>
-      <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">My orders</h1>
+      <h1 className="text-3xl font-extrabold sm:text-4xl">My orders</h1>
 
       <div className="mt-6">
         {error ? (
@@ -31,7 +31,7 @@ export default function OrdersPage() {
           >
             <Link
               to={page > 1 ? '/orders' : '/products'}
-              className="inline-block rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+              className="btn-primary"
             >
               {page > 1 ? 'Go to page 1' : 'Start shopping'}
             </Link>
@@ -66,14 +66,14 @@ function OrderCard({ order }) {
   return (
     <Link
       to={`/orders/${order._id}`}
-      className="block rounded-2xl border border-gray-200 bg-white p-4 transition hover:shadow-md focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:outline-none sm:p-5"
+      className="block card p-4 transition hover:shadow-md focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:outline-none sm:p-5"
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-3">
-          <p className="font-semibold text-gray-900">Order {shortOrderId(order._id)}</p>
+          <p className="font-semibold text-slate-900">Order {shortOrderId(order._id)}</p>
           <OrderStatusBadge order={order} />
         </div>
-        <p className="text-sm text-gray-500">{formatDateTime(order.createdAt)}</p>
+        <p className="text-sm text-slate-500">{formatDateTime(order.createdAt)}</p>
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-4">
@@ -85,22 +85,22 @@ function OrderCard({ order }) {
                   src={item.image}
                   alt={item.name}
                   loading="lazy"
-                  className="size-12 rounded-lg border-2 border-white object-cover shadow-sm"
+                  className="size-12 rounded-xl border-2 border-white object-cover shadow-sm"
                 />
               ) : (
-                <span className="block size-12 rounded-lg border-2 border-white bg-gray-100" />
+                <span className="block size-12 rounded-xl border-2 border-white bg-slate-100" />
               )}
             </li>
           ))}
           {extra > 0 && (
-            <li className="flex size-12 items-center justify-center rounded-lg border-2 border-white bg-gray-100 text-xs font-semibold text-gray-600">
+            <li className="flex size-12 items-center justify-center rounded-xl border-2 border-white bg-slate-100 text-xs font-semibold text-slate-600">
               +{extra}
             </li>
           )}
         </ul>
         <div className="text-right">
           <p className="font-semibold">{formatPrice(order.totalAmount)}</p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-slate-500">
             {itemCount} {itemCount === 1 ? 'item' : 'items'}
           </p>
         </div>
@@ -113,7 +113,7 @@ function OrdersSkeleton() {
   return (
     <ul className="space-y-4" aria-busy="true" aria-label="Loading orders">
       {Array.from({ length: 3 }, (_, i) => (
-        <li key={i} className="h-32 animate-pulse rounded-2xl bg-gray-200" />
+        <li key={i} className="h-32 animate-pulse rounded-2xl bg-slate-200" />
       ))}
     </ul>
   );

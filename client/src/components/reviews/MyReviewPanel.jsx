@@ -26,7 +26,7 @@ export default function MyReviewPanel({ slug, onChanged }) {
       </p>
     );
   }
-  if (!data) return <div className="h-20 animate-pulse rounded-xl bg-gray-100" aria-busy="true" aria-label="Loading" />;
+  if (!data) return <div className="h-20 animate-pulse rounded-xl bg-slate-100" aria-busy="true" aria-label="Loading" />;
 
   const afterChange = (message) => {
     setMode('view');
@@ -37,7 +37,7 @@ export default function MyReviewPanel({ slug, onChanged }) {
 
   const review = data.myReview;
   const flashBox = flash && (
-    <p role="status" className="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+    <p role="status" className="mb-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
       {flash}
     </p>
   );
@@ -48,7 +48,7 @@ export default function MyReviewPanel({ slug, onChanged }) {
       return (
         <>
           {flashBox}
-          <p className="text-sm text-gray-600">Only customers who have received this product can review it.</p>
+          <p className="text-sm text-slate-600">Only customers who have received this product can review it.</p>
         </>
       );
     }
@@ -68,14 +68,14 @@ export default function MyReviewPanel({ slug, onChanged }) {
     ) : (
       <>
         {flashBox}
-        <p className="text-sm text-gray-600">You bought this product. Tell other shoppers what you think.</p>
+        <p className="text-sm text-slate-600">You bought this product. Tell other shoppers what you think.</p>
         <button
           type="button"
           onClick={() => {
             setFlash('');
             setMode('form');
           }}
-          className="mt-3 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700"
+          className="btn-primary mt-3"
         >
           Write a review
         </button>
@@ -121,18 +121,18 @@ export default function MyReviewPanel({ slug, onChanged }) {
       {flashBox}
       <div className="rounded-xl border border-brand-100 bg-brand-50/40 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-sm font-semibold text-gray-900">Your review</p>
+          <p className="text-sm font-semibold text-slate-900">Your review</p>
           {review.status === 'hidden' && (
-            <span className="rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-semibold text-gray-700">Hidden by the store</span>
+            <span className="rounded-full bg-slate-200 px-2.5 py-0.5 text-xs font-semibold text-slate-700">Hidden by the store</span>
           )}
         </div>
         <Stars rating={review.rating} className="mt-2" />
-        <p className="mt-2 text-sm whitespace-pre-line text-gray-800">{review.comment}</p>
-        <p className="mt-2 text-xs text-gray-500">
+        <p className="mt-2 text-sm whitespace-pre-line text-slate-800">{review.comment}</p>
+        <p className="mt-2 text-xs text-slate-500">
           {review.updatedAt !== review.createdAt ? `Edited ${formatDateTime(review.updatedAt)}` : formatDateTime(review.createdAt)}
         </p>
         {review.status === 'hidden' && (
-          <p className="mt-3 text-sm text-gray-600">
+          <p className="mt-3 text-sm text-slate-600">
             Other shoppers can’t see this review{review.moderationNote ? ` (reason: ${review.moderationNote})` : ''}. It doesn’t count
             towards the product rating.
           </p>
