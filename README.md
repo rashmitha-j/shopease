@@ -193,7 +193,7 @@ ngrok when testing locally.
   may already have processed them, so an order is never placed twice. The login session is only cleared
   when the server answers 401, never because it couldn't be reached.
   While it waits, the page stays usable: the navbar shows Log in / Sign up until a login is confirmed,
-  categories and products show shimmering placeholder cards, and a small "Loading products…" toast appears
+  categories and products show shimmering placeholder cards, and a small "Loading…" toast appears
   in the bottom corner only if a request takes longer than 8 seconds.
 
 ## Testing

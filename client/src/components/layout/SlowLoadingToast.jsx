@@ -16,7 +16,7 @@ export default function SlowLoadingToast() {
             className="size-4 shrink-0 animate-spin rounded-full border-2 border-slate-200 border-t-brand-600 motion-reduce:animate-none"
             aria-hidden="true"
           />
-          Loading products…
+          Loading…
         </p>
       )}
     </div>
