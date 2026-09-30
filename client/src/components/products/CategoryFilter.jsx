@@ -13,11 +13,11 @@ export default function CategoryFilter({ selected, getSearch }) {
 
   return (
     <nav aria-label="Categories">
-      <h2 className="mb-2 hidden text-sm font-semibold text-gray-900 lg:block">Categories</h2>
-      <ul className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0 lg:flex-col lg:gap-0.5 lg:overflow-visible">
+      <h2 className="mb-3 hidden text-xs font-semibold tracking-wider text-slate-500 uppercase lg:block">Categories</h2>
+      <ul className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0 lg:card lg:flex-col lg:gap-0.5 lg:overflow-visible lg:p-2">
         {!data
           ? Array.from({ length: 6 }, (_, i) => (
-              <li key={i} className="h-9 w-24 shrink-0 animate-pulse rounded-full bg-gray-200 lg:w-full lg:rounded-lg" />
+              <li key={i} className="h-9 w-24 shrink-0 animate-pulse rounded-full bg-slate-200 lg:w-full lg:rounded-xl" />
             ))
           : items.map((item) => {
               const active = item.value.toLowerCase() === current;
@@ -26,15 +26,15 @@ export default function CategoryFilter({ selected, getSearch }) {
                   <Link
                     to={{ search: getSearch(item.value) }}
                     aria-current={active ? 'page' : undefined}
-                    className={`flex items-center justify-between gap-3 rounded-full border px-4 py-2 text-sm font-medium whitespace-nowrap transition lg:rounded-lg lg:border-transparent lg:px-3 ${
+                    className={`flex items-center justify-between gap-3 rounded-full border px-4 py-2 text-sm font-medium whitespace-nowrap transition lg:rounded-xl lg:border-transparent lg:px-3 ${
                       active
-                        ? 'border-brand-600 bg-brand-600 text-white lg:bg-brand-50 lg:text-brand-700'
-                        : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400 lg:bg-transparent lg:hover:bg-gray-100'
+                        ? 'border-transparent bg-linear-to-r from-brand-600 to-purple-600 text-white shadow-md shadow-brand-600/20'
+                        : 'border-slate-300 bg-white text-slate-700 hover:border-slate-400 lg:bg-transparent lg:hover:bg-slate-100'
                     }`}
                   >
                     {item.name}
                     {item.count !== undefined && (
-                      <span className={`text-xs ${active ? 'text-brand-100 lg:text-brand-600' : 'text-gray-400'}`}>
+                      <span className={`text-xs ${active ? 'text-indigo-100' : 'text-slate-500'}`}>
                         {item.count}
                       </span>
                     )}

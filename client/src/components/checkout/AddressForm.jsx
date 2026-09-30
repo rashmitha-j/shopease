@@ -35,7 +35,7 @@ export default function AddressForm({ values, errors, onChange, disabled }) {
       </div>
       {field('city', 'City', { autoComplete: 'address-level2', maxLength: 60 })}
       <div>
-        <label htmlFor="state" className="block text-sm font-medium text-gray-900">
+        <label htmlFor="state" className="block text-sm font-medium text-slate-900">
           State
         </label>
         <select
@@ -46,10 +46,10 @@ export default function AddressForm({ values, errors, onChange, disabled }) {
           autoComplete="address-level1"
           aria-invalid={errors.state ? true : undefined}
           aria-describedby={errors.state ? 'state-error' : undefined}
-          className={`mt-1.5 block w-full rounded-lg border bg-white px-3 py-2.5 text-sm shadow-sm focus:ring-2 focus:outline-none ${
+          className={`mt-1.5 block w-full rounded-xl border bg-white px-3 py-2.5 text-sm shadow-sm focus:ring-2 focus:outline-none ${
             errors.state
               ? 'border-red-400 focus:border-red-500 focus:ring-red-100'
-              : 'border-gray-300 focus:border-brand-500 focus:ring-brand-100'
+              : 'border-slate-300 focus:border-brand-500 focus:ring-brand-100'
           }`}
         >
           <option value="">Select a state</option>

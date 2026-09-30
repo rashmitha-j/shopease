@@ -32,15 +32,15 @@ export default function ConfirmDialog({
         e.preventDefault();
         if (!busy) onCancel();
       }}
-      className="m-auto w-[calc(100%-2rem)] max-w-md rounded-2xl p-0 shadow-xl backdrop:bg-gray-900/50"
+      className="m-auto w-[calc(100%-2rem)] max-w-md rounded-2xl p-0 shadow-xl backdrop:bg-slate-900/50"
     >
       <div className="p-6">
-        <h2 id="confirm-title" className="text-lg font-semibold text-gray-900">
+        <h2 id="confirm-title" className="text-lg font-semibold text-slate-900">
           {title}
         </h2>
-        <div className="mt-2 text-sm text-gray-600">{message}</div>
+        <div className="mt-2 text-sm text-slate-600">{message}</div>
         {error && (
-          <p role="alert" className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">
+          <p role="alert" className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-800">
             {error}
           </p>
         )}
@@ -49,7 +49,7 @@ export default function ConfirmDialog({
             type="button"
             onClick={onCancel}
             disabled={busy}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-60"
+            className="btn-secondary px-4 py-2 disabled:opacity-60"
           >
             {cancelLabel}
           </button>
@@ -57,7 +57,7 @@ export default function ConfirmDialog({
             type="button"
             onClick={onConfirm}
             disabled={busy}
-            className={`rounded-lg px-4 py-2 text-sm font-semibold text-white disabled:cursor-wait disabled:opacity-60 ${
+            className={`rounded-xl px-4 py-2 text-sm font-semibold text-white disabled:cursor-wait disabled:opacity-60 ${
               danger ? 'bg-red-600 hover:bg-red-700' : 'bg-brand-600 hover:bg-brand-700'
             }`}
           >

@@ -3,16 +3,66 @@
 @theme {
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
 
-  /* Brand colour used for buttons, links and highlights */
+  /* Brand colour used for buttons, links and highlights (indigo) */
   --color-brand-50: #eef2ff;
   --color-brand-100: #e0e7ff;
+  --color-brand-200: #c7d2fe;
   --color-brand-500: #6366f1;
   --color-brand-600: #4f46e5;
   --color-brand-700: #4338ca;
+  --color-brand-800: #3730a3;
+  --color-brand-900: #312e81;
+
+  /* Soft floating motion for the hero images */
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 8s ease-in-out infinite;
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
+  }
 }
 
 @layer base {
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    @apply bg-slate-50 text-slate-900 antialiased;
   }
+
+  h1,
+  h2,
+  h3 {
+    @apply tracking-tight;
+  }
+}
+
+/* The one gradient used across the site: indigo -> purple -> pink.
+   Every stop keeps white text above 4.5:1 contrast. */
+@utility bg-brand-gradient {
+  background-image: linear-gradient(120deg, #4338ca 0%, #7e22ce 55%, #be185d 100%);
+}
+
+@utility text-brand-gradient {
+  background-image: linear-gradient(90deg, #4f46e5, #9333ea, #db2777);
+  background-clip: text;
+  color: transparent;
+}
+
+/* Primary call to action: gradient pill with a gentle lift on hover */
+@utility btn-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-brand-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-600/25 transition duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-600/30 focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:outline-none active:translate-y-0 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none;
+}
+
+/* Secondary action: white with a subtle border */
+@utility btn-secondary {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition duration-200 hover:border-slate-400 hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+/* White surface used for every panel and list on the site */
+@utility card {
+  @apply rounded-2xl border border-slate-200/80 bg-white shadow-sm shadow-slate-900/5;
 }

@@ -10,7 +10,7 @@ export const STATUS_INFO = {
   confirmed: { label: 'Confirmed', className: 'bg-blue-100 text-blue-800' },
   shipped: { label: 'Shipped', className: 'bg-indigo-100 text-indigo-800' },
   delivered: { label: 'Delivered', className: 'bg-green-100 text-green-800' },
-  cancelled: { label: 'Cancelled', className: 'bg-gray-200 text-gray-700' },
+  cancelled: { label: 'Cancelled', className: 'bg-slate-200 text-slate-700' },
 };
 
 export const PAYMENT_METHOD_LABELS = { razorpay: 'Online (Razorpay)', cod: 'Cash on delivery' };

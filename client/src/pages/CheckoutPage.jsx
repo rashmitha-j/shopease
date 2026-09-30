@@ -50,7 +50,7 @@ export default function CheckoutPage() {
         <EmptyState title="Your cart is empty" message="Add some products before checking out.">
           <Link
             to="/products"
-            className="inline-block rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+            className="btn-primary"
           >
             Browse products
           </Link>
@@ -177,18 +177,18 @@ export default function CheckoutPage() {
   return (
     <>
       <title>Checkout | ShopEase</title>
-      <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Checkout</h1>
+      <h1 className="text-3xl font-extrabold sm:text-4xl">Checkout</h1>
 
       <form onSubmit={handleSubmit} noValidate className="mt-6 lg:grid lg:grid-cols-[1fr_22rem] lg:items-start lg:gap-8">
         <div className="space-y-6">
-          <section aria-labelledby="address-heading" className="rounded-2xl border border-gray-200 bg-white p-6">
+          <section aria-labelledby="address-heading" className="card p-6">
             <h2 id="address-heading" className="mb-5 text-lg font-semibold">
               Shipping address
             </h2>
             <AddressForm values={address} errors={errors} onChange={handleAddressChange} disabled={busy} />
           </section>
 
-          <section aria-labelledby="payment-heading" className="rounded-2xl border border-gray-200 bg-white p-6">
+          <section aria-labelledby="payment-heading" className="card p-6">
             <h2 id="payment-heading" className="mb-4 text-lg font-semibold">
               Payment method
             </h2>
@@ -200,7 +200,7 @@ export default function CheckoutPage() {
                   className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition ${
                     paymentMethod === option.value
                       ? 'border-brand-600 bg-brand-50 ring-1 ring-brand-600'
-                      : 'border-gray-300 hover:border-gray-400'
+                      : 'border-slate-300 hover:border-slate-400'
                   }`}
                 >
                   <input
@@ -212,8 +212,8 @@ export default function CheckoutPage() {
                     className="mt-1 accent-brand-600"
                   />
                   <span>
-                    <span className="block font-medium text-gray-900">{option.label}</span>
-                    <span className="block text-sm text-gray-600">{option.description}</span>
+                    <span className="block font-medium text-slate-900">{option.label}</span>
+                    <span className="block text-sm text-slate-600">{option.description}</span>
                   </span>
                 </label>
               ))}
@@ -223,20 +223,20 @@ export default function CheckoutPage() {
 
         <aside
           aria-labelledby="checkout-summary-heading"
-          className="mt-6 rounded-2xl border border-gray-200 bg-white p-6 lg:sticky lg:top-24 lg:mt-0"
+          className="mt-6 card p-6 lg:sticky lg:top-24 lg:mt-0"
         >
           <h2 id="checkout-summary-heading" className="text-lg font-semibold">
             Order summary
           </h2>
-          <ul className="mt-4 divide-y divide-gray-100 text-sm">
+          <ul className="mt-4 divide-y divide-slate-100 text-sm">
             {items.map((item) => (
               <li key={item.productId} className="flex gap-3 py-3">
                 {item.image && (
-                  <img src={item.image} alt="" className="size-12 shrink-0 rounded-md border border-gray-200 object-cover" />
+                  <img src={item.image} alt="" className="size-12 shrink-0 rounded-md border border-slate-200 object-cover" />
                 )}
                 <div className="min-w-0 flex-1">
-                  <p className="line-clamp-2 text-gray-900">{item.name}</p>
-                  <p className="text-gray-500">
+                  <p className="line-clamp-2 text-slate-900">{item.name}</p>
+                  <p className="text-slate-500">
                     Qty {item.quantity}
                     {item.stock < 1 && <span className="ml-2 font-semibold text-red-700">Out of stock</span>}
                   </p>
@@ -246,28 +246,28 @@ export default function CheckoutPage() {
             ))}
           </ul>
 
-          <dl className="mt-2 space-y-2 border-t border-gray-200 pt-4 text-sm">
+          <dl className="mt-2 space-y-2 border-t border-slate-200 pt-4 text-sm">
             <div className="flex justify-between">
-              <dt className="text-gray-600">Items ({totals.count})</dt>
+              <dt className="text-slate-600">Items ({totals.count})</dt>
               <dd>{formatPrice(totals.subtotal)}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-gray-600">Shipping</dt>
+              <dt className="text-slate-600">Shipping</dt>
               <dd>{shipping === 0 ? <span className="text-green-700">Free</span> : formatPrice(shipping)}</dd>
             </div>
-            <div className="flex justify-between border-t border-gray-200 pt-3 text-base font-semibold">
+            <div className="flex justify-between border-t border-slate-200 pt-3 text-base font-semibold">
               <dt>Total</dt>
               <dd>{formatPrice(totals.subtotal + shipping)}</dd>
             </div>
           </dl>
           {shipping > 0 && (
-            <p className="mt-2 text-xs text-gray-500">
+            <p className="mt-2 text-xs text-slate-500">
               Add {formatPrice(FREE_SHIPPING_THRESHOLD - totals.subtotal)} more for free shipping.
             </p>
           )}
 
           {formError && (
-            <div role="alert" className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+            <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
               {formError.message}
               {formError.cartLink && (
                 <>
@@ -280,7 +280,7 @@ export default function CheckoutPage() {
             </div>
           )}
           {hasOutOfStock && (
-            <p role="alert" className="mt-4 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            <p role="alert" className="mt-4 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
               Some items are out of stock.{' '}
               <Link to="/cart" className="font-semibold underline">
                 Remove them from your cart
@@ -292,11 +292,11 @@ export default function CheckoutPage() {
           <button
             type="submit"
             disabled={busy || hasOutOfStock}
-            className="mt-6 w-full rounded-lg bg-brand-600 px-4 py-3 font-semibold text-white shadow-sm hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="btn-primary mt-6 w-full py-3 text-base"
           >
             {submitLabel}
           </button>
-          <p className="mt-2 text-center text-xs text-gray-500">
+          <p className="mt-2 text-center text-xs text-slate-500">
             The final total is confirmed by our server when you place the order.
           </p>
         </aside>

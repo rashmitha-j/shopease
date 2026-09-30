@@ -1,7 +1,7 @@
 // Sample catalogue used by `npm run seed:products`. Prices are in INR.
-// Images are placeholder photos from picsum.photos (seeded so each product
-// always gets the same one); they will be replaced by Cloudinary uploads later.
-const image = (seed) => [{ url: `https://picsum.photos/seed/${seed}/600/600` }];
+// Images are free-to-use Pexels photos, cropped to 800x800 WebP and served by
+// the client from client/public/products/<slug>.webp (slug = the product's slug).
+const image = (slug) => [{ url: `/products/${slug}.webp` }];
 
 const products = [
   // Electronics
@@ -14,7 +14,7 @@ const products = [
     mrp: 12999,
     stock: 25,
     isFeatured: true,
-    images: image('headphones'),
+    images: image('wireless-noise-cancelling-headphones'),
   },
   {
     name: 'True Wireless Earbuds',
@@ -24,7 +24,7 @@ const products = [
     price: 2499,
     mrp: 3999,
     stock: 60,
-    images: image('earbuds'),
+    images: image('true-wireless-earbuds'),
   },
   {
     name: 'Smart Fitness Watch',
@@ -35,7 +35,7 @@ const products = [
     mrp: 6999,
     stock: 30,
     isFeatured: true,
-    images: image('smartwatch'),
+    images: image('smart-fitness-watch'),
   },
   {
     name: 'Portable Bluetooth Speaker',
@@ -44,7 +44,7 @@ const products = [
     category: 'Electronics',
     price: 1899,
     stock: 0,
-    images: image('speaker'),
+    images: image('portable-bluetooth-speaker'),
   },
 
   // Fashion
@@ -56,7 +56,7 @@ const products = [
     price: 2199,
     mrp: 2999,
     stock: 40,
-    images: image('denimjacket'),
+    images: image('classic-denim-jacket'),
   },
   {
     name: 'Everyday Running Sneakers',
@@ -67,7 +67,7 @@ const products = [
     mrp: 4499,
     stock: 35,
     isFeatured: true,
-    images: image('sneakers'),
+    images: image('everyday-running-sneakers'),
   },
   {
     name: 'Leather Minimalist Wallet',
@@ -76,7 +76,7 @@ const products = [
     category: 'Fashion',
     price: 899,
     stock: 80,
-    images: image('wallet'),
+    images: image('leather-minimalist-wallet'),
   },
 
   // Home
@@ -88,7 +88,7 @@ const products = [
     price: 1599,
     mrp: 1999,
     stock: 20,
-    images: image('coffeeset'),
+    images: image('ceramic-pour-over-coffee-set'),
   },
   {
     name: 'Scented Soy Candle Trio',
@@ -97,7 +97,7 @@ const products = [
     category: 'Home',
     price: 999,
     stock: 50,
-    images: image('candles'),
+    images: image('scented-soy-candle-trio'),
   },
   {
     name: 'Cotton Throw Blanket',
@@ -108,7 +108,7 @@ const products = [
     mrp: 1799,
     stock: 45,
     isFeatured: true,
-    images: image('blanket'),
+    images: image('cotton-throw-blanket'),
   },
 
   // Books
@@ -120,7 +120,7 @@ const products = [
     price: 649,
     mrp: 899,
     stock: 70,
-    images: image('cleancode'),
+    images: image('clean-code'),
   },
   {
     name: 'Designing Data-Intensive Applications',
@@ -131,7 +131,7 @@ const products = [
     mrp: 1999,
     stock: 25,
     isFeatured: true,
-    images: image('ddia'),
+    images: image('designing-data-intensive-applications'),
   },
   {
     name: 'Atomic Habits',
@@ -140,7 +140,7 @@ const products = [
     category: 'Books',
     price: 499,
     stock: 100,
-    images: image('atomichabits'),
+    images: image('atomic-habits'),
   },
 
   // Sports
@@ -152,7 +152,7 @@ const products = [
     price: 1199,
     mrp: 1599,
     stock: 55,
-    images: image('yogamat'),
+    images: image('non-slip-yoga-mat'),
   },
   {
     name: 'Adjustable Dumbbell Set',
@@ -163,7 +163,7 @@ const products = [
     mrp: 6999,
     stock: 12,
     isFeatured: true,
-    images: image('dumbbells'),
+    images: image('adjustable-dumbbell-set'),
   },
   {
     name: 'Insulated Steel Water Bottle',
@@ -172,7 +172,7 @@ const products = [
     category: 'Sports',
     price: 799,
     stock: 90,
-    images: image('bottle'),
+    images: image('insulated-steel-water-bottle'),
   },
   {
     name: 'Badminton Racquet Pair',
@@ -181,7 +181,7 @@ const products = [
     category: 'Sports',
     price: 1399,
     stock: 3,
-    images: image('badminton'),
+    images: image('badminton-racquet-pair'),
   },
 
   // Beauty
@@ -193,7 +193,7 @@ const products = [
     price: 599,
     mrp: 799,
     stock: 65,
-    images: image('serum'),
+    images: image('vitamin-c-face-serum'),
   },
   {
     name: 'Daily Moisturiser SPF 30',
@@ -203,7 +203,7 @@ const products = [
     price: 449,
     stock: 75,
     isFeatured: true,
-    images: image('moisturiser'),
+    images: image('daily-moisturiser-spf-30'),
   },
   {
     name: 'Bamboo Hair Brush',
@@ -212,7 +212,7 @@ const products = [
     category: 'Beauty',
     price: 349,
     stock: 0,
-    images: image('hairbrush'),
+    images: image('bamboo-hair-brush'),
   },
 ];
 

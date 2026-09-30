@@ -30,7 +30,7 @@ export default function ReviewForm({ initial = { rating: 0, comment: '' }, submi
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-4">
       {formError && (
-        <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
           {formError}
         </p>
       )}
@@ -62,7 +62,7 @@ export default function ReviewForm({ initial = { rating: 0, comment: '' }, submi
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 disabled:cursor-wait disabled:opacity-60"
+          className="btn-primary"
         >
           {submitting ? busyLabel : submitLabel}
         </button>
@@ -71,7 +71,7 @@ export default function ReviewForm({ initial = { rating: 0, comment: '' }, submi
             type="button"
             onClick={onCancel}
             disabled={submitting}
-            className="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
             Cancel
           </button>

@@ -10,7 +10,7 @@ export default function StarInput({ value, onChange, error, disabled }) {
 
   return (
     <fieldset disabled={disabled}>
-      <legend className="block text-sm font-medium text-gray-900">Your rating</legend>
+      <legend className="block text-sm font-medium text-slate-900">Your rating</legend>
       <div className="mt-1.5 flex items-center gap-3" onMouseLeave={() => setHover(0)}>
         <div className="flex">
           {[1, 2, 3, 4, 5].map((n) => (
@@ -28,7 +28,7 @@ export default function StarInput({ value, onChange, error, disabled }) {
                 className="sr-only"
                 aria-describedby={error ? 'rating-error' : undefined}
               />
-              <span aria-hidden="true" className={n <= shown ? 'text-amber-500' : 'text-gray-300'}>
+              <span aria-hidden="true" className={n <= shown ? 'text-amber-500' : 'text-slate-300'}>
                 ★
               </span>
               <span className="sr-only">
@@ -37,7 +37,7 @@ export default function StarInput({ value, onChange, error, disabled }) {
             </label>
           ))}
         </div>
-        <span className="text-sm text-gray-600" aria-hidden="true">
+        <span className="text-sm text-slate-600" aria-hidden="true">
           {LABELS[shown]}
         </span>
       </div>

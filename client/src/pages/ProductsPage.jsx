@@ -60,20 +60,21 @@ export default function ProductsPage() {
         <section aria-labelledby="products-heading" className="min-w-0">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 id="products-heading" className="text-2xl font-bold tracking-tight sm:text-3xl">
+              <p className="text-xs font-semibold tracking-wider text-brand-600 uppercase">Shop</p>
+              <h1 id="products-heading" className="mt-1 text-3xl font-extrabold sm:text-4xl">
                 {heading}
               </h1>
-              <p className="mt-1 text-sm text-gray-600" aria-live="polite">
+              <p className="mt-1 text-sm text-slate-600" aria-live="polite">
                 {data ? `${data.total} ${data.total === 1 ? 'product' : 'products'}` : ' '}
               </p>
             </div>
 
-            <label className="flex items-center gap-2 text-sm text-gray-700">
+            <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
               Sort by
               <select
                 value={sort}
                 onChange={(e) => navigate({ search: searchWith({ sort: e.target.value }) })}
-                className="rounded-lg border border-gray-300 bg-white py-2 pr-8 pl-3 text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-100 focus:outline-none"
+                className="rounded-xl border border-slate-300 bg-white py-2 pr-8 pl-3 text-sm shadow-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-100 focus:outline-none"
               >
                 {SORT_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>
@@ -88,7 +89,7 @@ export default function ProductsPage() {
             <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
               {q && <FilterChip label={`“${q}”`} to={searchWith({ q: '' })} />}
               {category && <FilterChip label={category} to={searchWith({ category: '' })} />}
-              <Link to="/products" className="font-medium text-brand-600 hover:text-brand-700">
+              <Link to="/products" className="font-semibold text-brand-600 hover:text-brand-800">
                 Clear all
               </Link>
             </div>
@@ -110,7 +111,7 @@ export default function ProductsPage() {
               >
                 <Link
                   to={page > 1 && data.total > 0 ? { search: searchWith({ page: 1 }) } : '/products'}
-                  className="inline-block rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+                  className="btn-primary"
                 >
                   {page > 1 && data.total > 0 ? 'Go to page 1' : 'View all products'}
                 </Link>
@@ -138,7 +139,7 @@ function FilterChip({ label, to }) {
   return (
     <Link
       to={{ search: to }}
-      className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-3 py-1 font-medium text-brand-700 hover:bg-brand-100"
+      className="inline-flex items-center gap-1 rounded-full bg-brand-100 px-3 py-1 font-medium text-brand-800 transition hover:bg-brand-200"
       aria-label={`Remove filter ${label}`}
     >
       {label}

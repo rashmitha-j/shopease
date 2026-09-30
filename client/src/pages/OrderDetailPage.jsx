@@ -25,7 +25,7 @@ export default function OrderDetailPage() {
         <EmptyState title="Order not found" message="Check the link, or find the order in your order history.">
           <Link
             to="/orders"
-            className="inline-block rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+            className="btn-primary"
           >
             My orders
           </Link>
@@ -81,17 +81,17 @@ export default function OrderDetailPage() {
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Order {shortOrderId(order._id)}</h1>
+            <h1 className="text-3xl font-extrabold sm:text-4xl">Order {shortOrderId(order._id)}</h1>
             <OrderStatusBadge order={order} />
           </div>
-          <p className="mt-1 text-sm text-gray-500">Placed on {formatDateTime(order.createdAt)}</p>
+          <p className="mt-1 text-sm text-slate-500">Placed on {formatDateTime(order.createdAt)}</p>
         </div>
         {canCancel(order) && (
           <button
             type="button"
             onClick={handleCancel}
             disabled={cancelling}
-            className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:border-red-300 hover:text-red-700 disabled:opacity-60"
+            className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:border-red-300 hover:text-red-700 disabled:opacity-60"
           >
             {cancelling ? 'Cancelling…' : 'Cancel order'}
           </button>
@@ -103,11 +103,11 @@ export default function OrderDetailPage() {
         </p>
       )}
 
-      <section aria-label="Order progress" className="mt-6 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+      <section aria-label="Order progress" className="mt-6 card p-5 sm:p-6">
         {order.status === 'cancelled' ? (
           <div>
-            <p className="font-semibold text-gray-900">This order was cancelled</p>
-            <p className="mt-1 text-sm text-gray-600">
+            <p className="font-semibold text-slate-900">This order was cancelled</p>
+            <p className="mt-1 text-sm text-slate-600">
               {order.cancelReason && `${order.cancelReason}. `}
               {order.cancelledAt && `Cancelled on ${formatDateTime(order.cancelledAt)}.`}
             </p>
@@ -151,19 +151,19 @@ function ProgressSteps({ current }) {
         return (
           <li key={label} className="flex flex-col items-center text-center" aria-current={i === current ? 'step' : undefined}>
             <div className="flex w-full items-center">
-              <span className={`h-0.5 flex-1 ${i === 0 ? 'invisible' : done ? 'bg-brand-600' : 'bg-gray-200'}`} />
+              <span className={`h-0.5 flex-1 ${i === 0 ? 'invisible' : done ? 'bg-brand-600' : 'bg-slate-200'}`} />
               <span
                 className={`flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
-                  done ? 'bg-brand-600 text-white' : 'bg-gray-200 text-gray-500'
+                  done ? 'bg-brand-600 text-white' : 'bg-slate-200 text-slate-500'
                 }`}
               >
                 {done ? '✓' : i + 1}
               </span>
               <span
-                className={`h-0.5 flex-1 ${i === STEPS.length - 1 ? 'invisible' : i < current ? 'bg-brand-600' : 'bg-gray-200'}`}
+                className={`h-0.5 flex-1 ${i === STEPS.length - 1 ? 'invisible' : i < current ? 'bg-brand-600' : 'bg-slate-200'}`}
               />
             </div>
-            <span className={`mt-2 text-xs sm:text-sm ${done ? 'font-medium text-gray-900' : 'text-gray-500'}`}>{label}</span>
+            <span className={`mt-2 text-xs sm:text-sm ${done ? 'font-medium text-slate-900' : 'text-slate-500'}`}>{label}</span>
           </li>
         );
       })}
@@ -174,9 +174,9 @@ function ProgressSteps({ current }) {
 function DetailSkeleton() {
   return (
     <div className="space-y-6" aria-busy="true" aria-label="Loading order">
-      <div className="h-10 w-64 animate-pulse rounded bg-gray-200" />
-      <div className="h-24 animate-pulse rounded-2xl bg-gray-200" />
-      <div className="h-64 animate-pulse rounded-2xl bg-gray-200" />
+      <div className="h-10 w-64 animate-pulse rounded bg-slate-200" />
+      <div className="h-24 animate-pulse rounded-2xl bg-slate-200" />
+      <div className="h-64 animate-pulse rounded-2xl bg-slate-200" />
     </div>
   );
 }

@@ -11,7 +11,7 @@ export default function CartLine({ item }) {
 
   return (
     <li className="flex gap-4 py-5">
-      <Link to={href} className="size-24 shrink-0 overflow-hidden rounded-lg border border-gray-200 bg-gray-100 sm:size-28">
+      <Link to={href} className="size-24 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100 sm:size-28">
         {item.image && (
           <img
             src={item.image}
@@ -24,11 +24,11 @@ export default function CartLine({ item }) {
 
       <div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:justify-between">
         <div className="min-w-0">
-          <p className="text-xs font-medium tracking-wide text-gray-500 uppercase">{item.brand}</p>
-          <Link to={href} className="line-clamp-2 font-medium text-gray-900 hover:text-brand-700">
+          <p className="text-xs font-medium tracking-wide text-slate-500 uppercase">{item.brand}</p>
+          <Link to={href} className="line-clamp-2 font-medium text-slate-900 hover:text-brand-700">
             {item.name}
           </Link>
-          <p className="mt-1 text-sm text-gray-600">{formatPrice(item.price)} each</p>
+          <p className="mt-1 text-sm text-slate-600">{formatPrice(item.price)} each</p>
           {outOfStock ? (
             <p className="mt-1 text-sm font-semibold text-red-700">Out of stock, not included in the total</p>
           ) : (
@@ -50,7 +50,7 @@ export default function CartLine({ item }) {
             <button
               type="button"
               onClick={() => removeItem(item.productId)}
-              className="text-sm font-medium text-gray-500 hover:text-red-700"
+              className="text-sm font-medium text-slate-500 hover:text-red-700"
               aria-label={`Remove ${item.name} from cart`}
             >
               Remove
