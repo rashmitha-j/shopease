@@ -49,7 +49,7 @@ function SearchForm({ onSearch, className = '' }) {
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
-  const { user, status, logout } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
 
   // Return to the current page after logging in. On the login/register pages
@@ -82,10 +82,10 @@ export default function Navbar() {
         <SearchForm className="mx-auto hidden w-full max-w-md md:block" />
 
         <div className="ml-auto hidden shrink-0 items-center gap-2 md:flex">
-          {status === 'loading' ? (
-            // Reserve the space while the session is being restored, so the navbar doesn't jump
-            <div className="h-9 w-36" aria-hidden="true" />
-          ) : user ? (
+          {/* Log in / Sign up show straight away, even while the session check is still pending
+              (it can take a while when the server is waking up); the user menu replaces them
+              only once a login is confirmed */}
+          {user ? (
             <>
               {user.role === 'admin' && (
                 // Icon only between md and lg, where the navbar is tight; icon + text from lg
@@ -152,59 +152,57 @@ export default function Navbar() {
               </NavLink>
             ))}
           </div>
-          {status === 'ready' && (
-            <div className="border-t border-slate-200 pt-3">
-              {user ? (
-                <>
-                  {user.role === 'admin' && (
-                    <NavLink
-                      to="/admin"
-                      onClick={closeMenu}
-                      className={({ isActive }) => `mb-1 block ${navLinkClass({ isActive })}`}
-                    >
-                      Admin
-                    </NavLink>
-                  )}
+          <div className="border-t border-slate-200 pt-3">
+            {user ? (
+              <>
+                {user.role === 'admin' && (
                   <NavLink
-                    to="/orders"
+                    to="/admin"
                     onClick={closeMenu}
-                    className={({ isActive }) => `mb-3 block ${navLinkClass({ isActive })}`}
+                    className={({ isActive }) => `mb-1 block ${navLinkClass({ isActive })}`}
                   >
-                    My orders
+                    Admin
                   </NavLink>
-                  <div className="flex items-center justify-between gap-3">
-                    <UserBadge user={user} showEmail />
-                    <button
-                      type="button"
-                      onClick={handleLogout}
-                      className="btn-secondary px-4 py-2"
-                    >
-                      Log out
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <div className="grid grid-cols-2 gap-2">
-                  <Link
-                    to="/login"
-                    state={authLinkState}
-                    onClick={closeMenu}
+                )}
+                <NavLink
+                  to="/orders"
+                  onClick={closeMenu}
+                  className={({ isActive }) => `mb-3 block ${navLinkClass({ isActive })}`}
+                >
+                  My orders
+                </NavLink>
+                <div className="flex items-center justify-between gap-3">
+                  <UserBadge user={user} showEmail />
+                  <button
+                    type="button"
+                    onClick={handleLogout}
                     className="btn-secondary px-4 py-2"
                   >
-                    Log in
-                  </Link>
-                  <Link
-                    to="/register"
-                    state={authLinkState}
-                    onClick={closeMenu}
-                    className="btn-primary px-4 py-2"
-                  >
-                    Sign up
-                  </Link>
+                    Log out
+                  </button>
                 </div>
-              )}
-            </div>
-          )}
+              </>
+            ) : (
+              <div className="grid grid-cols-2 gap-2">
+                <Link
+                  to="/login"
+                  state={authLinkState}
+                  onClick={closeMenu}
+                  className="btn-secondary px-4 py-2"
+                >
+                  Log in
+                </Link>
+                <Link
+                  to="/register"
+                  state={authLinkState}
+                  onClick={closeMenu}
+                  className="btn-primary px-4 py-2"
+                >
+                  Sign up
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </header>

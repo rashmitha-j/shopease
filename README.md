@@ -189,10 +189,12 @@ ngrok when testing locally.
   after a quiet period can take up to 2 minutes** while the server wakes up. The client is built for this
   (`client/src/api/client.js`): each request waits up to 90 seconds; a request that can't reach the server
   (network error, timeout, or a 502/503/504 from the Vercel proxy) is retried every 10 seconds for up to
-  2 minutes; and a "Waking up the server" banner appears once a request has waited 5 seconds or is being
-  retried. POST/PUT/PATCH/DELETE requests are not retried after a timeout (or a 504), because the server may
-  already have processed them, so an order is never placed twice. The login session is only cleared when
-  the server answers 401, never because it couldn't be reached.
+  2 minutes. POST/PUT/PATCH/DELETE requests are not retried after a timeout (or a 504), because the server
+  may already have processed them, so an order is never placed twice. The login session is only cleared
+  when the server answers 401, never because it couldn't be reached.
+  While it waits, the page stays usable: the navbar shows Log in / Sign up until a login is confirmed,
+  categories and products show shimmering placeholder cards, and a small "Loading products…" toast appears
+  in the bottom corner only if a request takes longer than 8 seconds.
 
 ## Testing
 

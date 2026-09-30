@@ -13,7 +13,7 @@ export const NETWORK = {
   timeoutMs: 90_000, // give up on a single attempt after 90 s
   retryDelayMs: 10_000, // wait between retries
   retryWindowMs: 120_000, // no waiting beyond 2 minutes after the first attempt
-  slowAfterMs: 5_000, // show the "waking up" banner once a request has waited this long
+  slowAfterMs: 8_000, // show the loading toast once a request has waited this long (retries included)
 };
 
 // Retrying these can't cause a duplicate on the server
@@ -47,9 +47,9 @@ export class ApiError extends Error {
   }
 }
 
-// ---- "Waking up the server" banner -------------------------------------------------------
-// Counts requests that have waited longer than NETWORK.slowAfterMs or are retrying.
-// The banner subscribes with useSyncExternalStore.
+// ---- Loading toast -------------------------------------------------------------------------
+// Counts requests that have been waiting longer than NETWORK.slowAfterMs, measured from the
+// first attempt (time spent retrying counts). The toast subscribes with useSyncExternalStore.
 let slowRequests = 0;
 const slowListeners = new Set();
 const notifySlow = () => slowListeners.forEach((listener) => listener());
@@ -70,7 +70,6 @@ function trackSlowness() {
   };
   const timer = setTimeout(markSlow, NETWORK.slowAfterMs);
   return {
-    markSlow,
     done() {
       clearTimeout(timer);
       if (!slow) return;
@@ -171,7 +170,6 @@ async function request(path, { method = 'GET', body, signal } = {}) {
       if (Date.now() + NETWORK.retryDelayMs >= deadline) {
         throw new ApiError(failure === 'timeout' ? TIMED_OUT : UNREACHABLE, 0);
       }
-      slowness.markSlow();
       await wait(NETWORK.retryDelayMs, signal);
     }
   } finally {
