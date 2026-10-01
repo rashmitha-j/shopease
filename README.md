@@ -186,10 +186,12 @@ ngrok when testing locally.
   With the wrong value, all visitors would share one rate-limit bucket (the proxy's IP).
 - In the Razorpay Dashboard, point the webhook to `https://<render-url>/api/payments/razorpay/webhook`.
 - **Cold starts:** the backend runs on Render's free tier, which sleeps when idle, so **the first request
-  after a quiet period can take up to 2 minutes** while the server wakes up. The client is built for this
-  (`client/src/api/client.js`): each request waits up to 90 seconds; a request that can't reach the server
+  after a quiet period can take a few minutes** while the server wakes up. The client is built for this
+  (`client/src/api/client.js`): as soon as the app loads it pings the Render health URL directly
+  (`VITE_RENDER_HEALTH_URL`, see `client/.env.example`), because requests through the Vercel proxy
+  don't reliably wake it. Each request waits up to 90 seconds; a request that can't reach the server
   (network error, timeout, or a 502/503/504 from the Vercel proxy) is retried every 10 seconds for up to
-  2 minutes. POST/PUT/PATCH/DELETE requests are not retried after a timeout (or a 504), because the server
+  3 minutes. POST/PUT/PATCH/DELETE requests are not retried after a timeout (or a 504), because the server
   may already have processed them, so an order is never placed twice. The login session is only cleared
   when the server answers 401, never because it couldn't be reached.
   While it waits, the page stays usable: the navbar shows Log in / Sign up until a login is confirmed,

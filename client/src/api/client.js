@@ -7,12 +7,16 @@ const TIMED_OUT = 'The server is taking too long to respond. Please try again in
 const TIMED_OUT_MAYBE_DONE =
   'The server took too long to respond, so your request may or may not have gone through. Please check before trying again.';
 
+// Health endpoint on the Render server itself, not behind the Vercel /api rewrite
+const WAKE_URL =
+  import.meta.env.VITE_RENDER_HEALTH_URL ?? 'https://shopease-api-gm4r.onrender.com/api/health';
+
 // The backend runs on Render's free tier, which sleeps when idle: the first request after a
-// while can take up to ~2 minutes while it wakes. Exported so tests can shorten the timings.
+// while can take a few minutes while it wakes. Exported so tests can shorten the timings.
 export const NETWORK = {
   timeoutMs: 90_000, // give up on a single attempt after 90 s
   retryDelayMs: 10_000, // wait between retries
-  retryWindowMs: 120_000, // no waiting beyond 2 minutes after the first attempt
+  retryWindowMs: 180_000, // no waiting beyond 3 minutes after the first attempt
   slowAfterMs: 8_000, // show the loading toast once a request has waited this long (retries included)
 };
 
@@ -44,6 +48,18 @@ export class ApiError extends Error {
     super(message);
     this.name = 'ApiError';
     this.status = status;
+  }
+}
+
+// Called once when the app loads. Requests through the Vercel proxy don't reliably wake a
+// sleeping Render server, but one sent straight to it does. Fire-and-forget: 'no-cors' gives
+// an unreadable response, which is fine, since only the request reaching Render matters.
+export function wakeServer() {
+  if (!import.meta.env.PROD || !WAKE_URL) return; // development talks to localhost
+  try {
+    fetch(WAKE_URL, { mode: 'no-cors', cache: 'no-store', credentials: 'omit' }).catch(() => {});
+  } catch {
+    // an invalid URL throws synchronously; the normal retries still apply
   }
 }
 
